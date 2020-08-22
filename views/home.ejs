@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <script src="/socket.io/socket.io.js"></script>
+     
+        <title>Home - banhbaoapp.com</title>
+        <script src="jquery351.js"></script>
+        
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+            integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    
+     <style type="text/css">
+        .text-hidden {
+           text-overflow: ellipsis;
+           overflow: hidden;
+           white-space: nowrap;
+        }
+  
+        .text-shown {
+           word-wrap: break-word;
+        }
+     </style>
+
+       
+
+    </head>
+    <body>
+        
+        <div class="container">
+            
+            <h1>Banhbaoapp.com Project Internal - Chat cùng người lạ</h1>
+                        
+            <div class="alert alert-danger col-md-12 text-center" id="notLoggedIn">Vui lòng đăng nhập!</div>
+         
+            <div class="alert alert-info text-hidden col-md-12" id="loggedIn"></div>
+         
+            <div class="d-flex justify-content-center row">
+               <div class="col-md-6">
+                  <div class="panel panel-default" id="login">
+                     <div class="panel-heading">
+                        <h3 class="panel-title">Login</h3>
+                     </div>
+                     <div class="panel-body">
+                        <form id="loginForm">
+                           <div class="form-group">
+                              <input type="text" class="form-control" id="exampleInputEmail1" placeholder="username"
+                                     required name="username">
+                           </div>
+                           <div class="form-group">
+                              <input type="password" class="form-control" id="exampleInputPassword1"
+                                     placeholder="password" required name="password">
+                           </div>
+                           <button type="submit" class="btn btn-default">Đăng nhập</button>
+                        </form>
+                     </div>
+                  </div>
+                 
+                  <div id="userInfo">
+                    
+                     <div class="panel panel-default">
+                        <div class="panel-heading">
+                           <h3 class="panel-title">Infomation user</h3>
+                        </div>
+                        <div class="panel-body">
+                           <div id="userInfoBody"></div>
+                           <button type="button" class="btn btn-default" id="logoutButton">Đăng xuất</button>
+                        </div>
+                     </div>
+                  </div>
+
+               </div>
+            
+               <div class="col-md-6" id="responsePanel">
+                  
+                  <div class="panel panel-default">
+                     <div class="panel-heading">
+                        <h3 class="panel-title">Test Chat with socket.io</h3>
+                     </div>
+                     <div class="panel-body">
+                        <textarea id="areMsg" class="form-control" aria-label="With textarea" rows="3" disabled></textarea>
+                     </div>
+                     <div class="input-group mb-3">
+                        <input id="intext" type="text" class="form-control" placeholder="Nhập..." aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-secondary" id="click">Button</button>
+                        </div>
+                        <button class="btn btn-outline-secondary" id="findpartner">Tìm</button>
+                      </div>
+                  </div>
+                  
+               </div>
+               
+               
+               
+            </div>
+         </div>
+         
+         <div class="modal fade" tabindex="-1" role="dialog" id="loginErrorModal">
+            <div class="modal-dialog">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h4 class="modal-title">Login Failed</h4>
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                  </div>
+                  <div class="modal-body"></div>
+                  <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+               </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+         </div><!-- /.modal -->
+         
+         <script src="https://code.jquery.com/jquery-2.2.2.js" integrity="sha256-4/zUCqiq0kqxhZIyp4G0Gk+AOtCJsY1TA00k5ClsZYE="
+                 crossorigin="anonymous"></script>
+         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" 
+                 integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  
+         <script src="style.js"></script>
+         <script>
+            const tk = localStorage.getItem("jwtToken");
+            var socket = io("http://localhost:3000/", {query : 'token='+tk });
+          
+             socket.on("all-message",function(data){
+                var msg = document.getElementById("areMsg").value;
+                 msg = msg+"\n"+data;
+                 document.getElementById("areMsg").value = msg;
+             });
+ 
+             $(document).ready(function(){
+                 
+ 
+                 $("#findpartner").click(function(){
+                    console.log('find-click');
+                    
+                   socket.emit("find-partner","alalo");
+
+                   socket.on('joined-to-room', function ( { roomId }){
+                     console.log('joined-to-room');
+                        $("#click").click(function(){
+                           const msg = {
+                              roomId,
+                              content: document.getElementById("intext").value
+                           };
+                              document.getElementById("intext").value = "";
+                              if(msg.content.length > 0)
+                                 socket.emit("send-message",msg);
+
+                        });
+
+                        socket.on('new-message', message => {
+
+                           console.log('new message', message);
+                        });
+                   });
+                 });
+             });
+         </script>
+    </body>
+</html>
