@@ -4,104 +4,76 @@ const _ = require("lodash");
 
 
 const RoomDetails = require("../../models/Database");
+const MessageModel = require("../../models/Message");
 const User = require("../../models/User");
 const ALPHABET = "0123456789ABCDEFGHIKLMNOPQRSTUVWXYZ";
 
 const decodedToken = token => jwt.verify(token, config.get("jwtSecret"));
 
 
-var clients = [];
+const clients = [];
 const rooms = [];
 
 const connect = io => {
-    io.on("connection", function(socket) {
+  io.on("connection", function (socket) {
 
-        const token = socket.handshake.query.token;
-        if(!token || token == "null" || token == "" || token == null || token == undefined ) {
-            console.log("token invalid:",token);
+    const token = socket.handshake.query.token;
+    if (!token || token == "null" || token == "" || token == null || token == undefined) {
+      console.log("token invalid:", token);
+    }
+    else {
+      const { username, id } = decodedToken(token);
+
+      socket.username = username;
+      socket.userId = id;
+
+      socket.on("find-partner", async (data) => {
+        // lấy ngẫu nhiên trong hàng đợi 1 user để tạo room
+        const userToCreateRoom = _.sample(clients);
+
+        if (!userToCreateRoom || userToCreateRoom.userId === socket.userId) // ko co ai
+        {
+          let client = {
+            socket: socket,
+            username: socket.username,
+            userId: socket.userId
+          };
+          clients.push(client);
         }
-        else {
-            const username = decodedToken(token).username;  
-            console.log("username", username);
-            console.log("connected", socket.connected);
+        else { // create room 
 
-            // socket.on("send-message", (message) => {
-            //     User.findOne(condition)
-            //     .select("-password")
-            //     .then(user => {
-            //         if (user) {
-            //             const roomActi = {userID:userID,status:1}
-            //             RoomDetails.findOne(roomActi)
-            //             .then(room => {
-            //                 if(room){
-            //                     // success
-            //                     console.log("connected", message);
-            //                     socket.emit("all-message",user.username +":"+ message);
-            //                 }
-            //                 else {
-            //                     console.log("not found room");
-            //                 }
-            //             });
-                
-            //         } else {
-            //             // failed
-            //             socket.emit("error","User not exist");
-            //         }
-            //     });
-            // });
+          // tạo phòng 
+          _.remove(clients, client => client.userId === userToCreateRoom.userId);
 
+          // findOrCreateRoomObject by memberIds
+          const roomId = await RoomDetails.findRoomOrCreateOneWithMembers([userToCreateRoom.userId, socket.userId]);
 
+          const room = {
+            roomId: roomId
+          };
 
-            socket.on("find-partner", (data) => { 
-                
-                console.log('start matching for ' + username + ' ...');
-                
-                // lấy ngẫu nhiên trong hàng đợi 1 user để tạo room
+          rooms.push(room);
 
-                const userToCreateRoom = _.sample(clients);
+          socket.join(room.roomId);
 
-                if(!userToCreateRoom) // ko co ai
-                {
-                    console.log('no body');
-                    
-                    clients.push({
-                        socket : socket,
-                        username: username
-                    });
-                }
-                else { // create room 
+          userToCreateRoom.socket.join(room.roomId);
 
-                    console.log('found ', userToCreateRoom.socket.id);
-                    // tạo phòng 
-                    _.remove(clients, x => x.username === userToCreateRoom.username);
-                    const newRoomId = _.uniqueId('room-');
-
-                    rooms.push({
-                        roomId: newRoomId
-                        //members: [username, userToCreateRoom]
-                    });
-
-                    socket.join(newRoomId);
-                    userToCreateRoom.socket.join(newRoomId);
-                    io.to(newRoomId).emit('joined-to-room', {
-                        roomId: newRoomId
-                    });
-                }
-                
-                socket.on('send-message', message => {
-                    console.log('new message from ',username, message );
-                    io.to(message.roomId).emit('new-message', message);
-
-                });
-
-            });
+          io.to(room.roomId).emit('joined-to-room', room);
         }
 
-        socket.on("disconnect", reason => {
-
-            console.log("disconnected", socket.disconnected, reason);
-            
+        socket.on('send-message', async (message) => {
+          // send message to room
+          io.to(message.roomId).emit('new-message', message);
+          // insert message to db
+          const messageCreatedResult = await MessageModel.sendMessageToRoom(socket.userId, message.content, message.roomId);
         });
-     });
+
+      });
+    }
+
+    socket.on("disconnect", reason => {
+      console.log("disconnected", socket.username, socket.userId, socket.disconnected, reason);
+    });
+  });
 };
 module.exports = connect;

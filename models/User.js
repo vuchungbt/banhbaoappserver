@@ -8,11 +8,9 @@ const UserSchema = new Schema({
   },
   username: {
     type: String,
-    required: true
   },
   password: {
     type: String,
-    required: true
   },
   firstname: {
     type: String,
@@ -26,8 +24,17 @@ const UserSchema = new Schema({
   dob: {
     type: Date,
   },
+  picture: {
+    type: String,
+  },
   gender: {
     type: String,
+  },
+  facebook_id: {
+    type : String,
+  },
+  picture : {
+	type : String,
   }
 });
 

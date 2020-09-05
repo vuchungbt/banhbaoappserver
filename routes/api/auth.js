@@ -4,9 +4,11 @@ const bcrypt = require("bcryptjs");
 const config = require("config");
 const jwt = require("jsonwebtoken");
 const authMiddleware = require("../../middleware/auth");
-
+const axios = require("axios");
 //Model
 const User = require("../../models/User");
+
+const facebookApi = "https://graph.facebook.com/me?fields=email,birthday,link,first_name,id,last_name,gender,picture&access_token=";
 
 // @route POST api/auth
 // @desc Authenticate An User
@@ -18,7 +20,7 @@ router.post("/", (req, res) => {
   if (!username || !password) {
     return res
       .status(400)
-      .json({ status:"400",msg: "Please enter both username and password!" });
+      .json({ status: "400", msg: "Please enter both username and password!" });
   }
 
   username = username.toLowerCase();
@@ -27,7 +29,7 @@ router.post("/", (req, res) => {
   User.findOne({ username }).then(user => {
     if (!user) {
       console.log("user not exist");
-      return res.status(401).json({status:401, msg: "User does not exists" });
+      return res.status(401).json({ status: 401, msg: "User does not exists" });
     } else {
       validatePass(res, password, user);
     }
@@ -37,20 +39,22 @@ router.post("/", (req, res) => {
 function validatePass(res, password, user) {
   //Validate password
   bcrypt.compare(password, user.password).then(isMatch => {
-    if (!isMatch) return res.status(401).json({ status:401,msg: "Password is incorect!" });
+    if (!isMatch) return res.status(401).json({ status: 401, msg: "Password is incorect!" });
     jwt.sign(
-      { id: user.id,
-      username: user.username },
+      {
+        id: user.id,
+        username: user.username
+      },
       config.get("jwtSecret"),
-      { expiresIn: 10000000 },
+      { expiresIn: 86400 },
       (err, token) => {
         if (err) {
-            console.log("failed valid jwt");
-            res.status(401)
+          console.log("failed valid jwt");
+          res.status(401)
             .json({
-                status:401,
-                msg: "failed valid token"
-              });
+              status: 401,
+              msg: "failed valid token"
+            });
         };
         const responseUser = {
           token,
@@ -58,11 +62,11 @@ function validatePass(res, password, user) {
           username: user.username
         };
         res.status(200)
-        .json({
-            status:200,
+          .json({
+            status: 200,
             user: responseUser
-        });
-        
+          });
+
       }
     );
   });
@@ -76,11 +80,106 @@ router.get("/me", authMiddleware, (req, res) => {
     .select("-password")
     .then(User => {
       res.json(
-          { 
-                status:200,
-                User 
-            }
-          );
+        {
+          status: 200,
+          User
+        }
+      );
     });
 });
+router.post("/facebook", async (req, res, next) => {
+  try {
+    
+    const accessToken = req.body.access_token;
+    const url = facebookApi + accessToken;
+    const datares = await axios.get(url); 
+    let datajson = datares.data;
+    console.log('datajson.data:',datajson);
+
+    if (!datajson) {
+      res.json({
+        status: 401,
+        msg: "Auth failed",
+      });
+    }
+    console.log('datajson', datajson);
+    //Check for existing user
+    User.findOne({ facebook_id: datajson.id }).then(user => {
+      if (!user) {
+        console.log("user first login");
+        const newUser = new User({
+          username: datajson.id,
+          firstname: datajson.firstname,
+          lastname: datajson.lastname,
+          email: datajson.email,
+          gender: datajson.gender,
+          dob: datajson.birthday,
+          facebook_id: datajson.id,
+          picture: datajson.picture.data.url
+        });
+        newUser.save().then(user => {
+          jwt.sign(
+            { id: user.id, username: user.username },
+            config.get("jwtSecret"),
+            { expiresIn: 86400 },
+            (err, token) => {
+              if (err) {
+                console.log("failed bcrypt jwt");
+                res.status(401)
+                  .json({
+                    status: 401,
+                    msg: "jwt failed"
+                  });
+              };
+              res.status(200)
+                .json({
+                  status: 200,
+                  user: {
+                    token,
+                    _id: user.id,
+                    username: user.username
+                  }
+                });
+            }
+          );
+        });
+
+
+      } else {
+        jwt.sign(
+          { id: user.id, username: user.username },
+          config.get("jwtSecret"),
+          { expiresIn: 86400 },
+          (err, token) => {
+            if (err) {
+              console.log("failed bcrypt jwt");
+              res.status(401)
+                .json({
+                  status: 401,
+                  msg: "jwt failed"
+                });
+            };
+            res.status(200)
+              .json({
+                status: 200,
+                user: {
+                  _id: user.id,
+                  username: user.username,
+                  token
+                }
+              });
+          }
+        );
+      }
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.json({
+      status: 401,
+      msg: "Auth failed",
+    });
+  }
+});
+
 module.exports = router;
