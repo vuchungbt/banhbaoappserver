@@ -40,7 +40,7 @@
 
 		</div>
 		<div>
-			<h4>Chức năng đích</h4>
+			<h4>1.Chức năng đích</h4>
 			<div>
 				<div class="raw">
 
@@ -51,7 +51,7 @@
 
 		<hr>
 		<div>
-			<h4>Giao diện (mockup)</h4>
+			<h4>2.Giao diện (mockup)</h4>
 		</div>
 		<div class="row">
 			<div class="col-md-12">
@@ -159,7 +159,7 @@
 			</div>
 		</div>
 		<div>
-			<h4>Giao diện (design)</h4>
+			<h4>3.Giao diện (design)</h4>
 		</div>
 		<div class="row">
 			<div class="col-md-12">
@@ -328,7 +328,7 @@
 		</div>
 		<hr>
 		<div>
-			<h4>Resource</h4>
+			<h4>4.Resource</h4>
 		</div>
 		<div class="row">
 			<div class="col-md-12">
@@ -353,7 +353,7 @@
 			</div>
 		</div>
 		<div>
-			<h4>Chức năng</h4>
+			<h4>5.Chức năng</h4>
 		</div>
 		<div class="row">
 			<div class="col-md-12">
@@ -376,7 +376,7 @@
 
 		<hr>
 		<div>
-			<h4>Use Case</h4>
+			<h4>6.Use Case</h4>
 		</div>
 		<div class="row">
 			<div class="col-md-12">
@@ -385,7 +385,16 @@
 		</div>
 		<hr>
 		<div>
-			<h4>API</h4>
+			<h4>7.Chat Workfollow</h4>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<img src="/docs/find-partnerWorkfollow.JPG" />
+			</div>
+		</div>
+		<hr>
+		<div>
+			<h4>8.API</h4>
 		</div>
 		<div class="row">
 			<!--Register-->
@@ -575,13 +584,11 @@
 						<td>
 							<code>
 						{<br/> 
-							"user" : {<br/>
-							&nbsp;&nbsp;&nbsp;&nbsp;"id": "5efc8e8ea0358c106cd8c38d",<br/>
-							&nbsp;&nbsp;&nbsp;&nbsp;"firstname":"abc",<br/>
-							&nbsp;&nbsp;&nbsp;&nbsp;"lastname":"efg",<br/>
-							&nbsp;&nbsp;&nbsp;&nbsp;"email":"abc2@cc.co",<br/>
-							&nbsp;&nbsp;&nbsp;&nbsp;"dob":"01/15/2000"<br/>
-							&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+							&nbsp;&nbsp;"id": "5efc8e8ea0358c106cd8c38d",<br/>
+							&nbsp;&nbsp;"firstname":"abc",<br/>
+							&nbsp;&nbsp;"lastname":"efg",<br/>
+							&nbsp;&nbsp;"email":"abc2@cc.co",<br/>
+							&nbsp;&nbsp;"dob":"01/15/2000"<br/>
 						}
 						</code>
 						</td>
@@ -607,6 +614,104 @@
 						<td><code>{ <br/>
 					"status" : 401,<br/>
 					"msg" : "Update failed" <br/>
+				}
+				</code></td>
+					</tr>
+					</tbody>
+			</table>
+
+			<!--Update Password-->
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th scope="col">
+							<div class="alert alert-success" role="alert">#Cập nhật Password</div>
+						</th>
+						<td>Post</td>
+						<td><code>/api/user/password</pre></td>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<th scope="row">Header</th>
+				<td>application/json; charset=utf-8</td>
+				<td><code>"auth-token": "AAA.BBB.CCC"</code></td>
+					</tr>
+					<tr>
+						<th scope="row">Body</th>
+						<td>required</td>
+						<td>
+							<code>
+						{<br/> 
+							&nbsp;&nbsp;"password":"123123",<br/>
+							&nbsp;&nbsp;"new_password":"abcxyz"<br/>
+						}
+						</code>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Result</th>
+						<td>Successfully</td>
+						<td><code>{ <br/>
+					"status": 200,<br/>
+					"msg": "Update success"<br/>
+				}</code></td>
+					</tr>
+					<tr>
+						<th scope="row">Result</th>
+						<td>Failed</td>
+						<td><code>{ <br/>
+					"status" : 401,<br/>
+					"msg" : "Update failed" <br/>
+				}
+				</code></td>
+					</tr>
+					</tbody>
+			</table>
+
+			<!--Feed back-->
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th scope="col">
+							<div class="alert alert-success" role="alert">#Phản hồi</div>
+						</th>
+						<td>Post</td>
+						<td><code>/api/user/feedback</pre></td>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<th scope="row">Header</th>
+				<td>application/json; charset=utf-8</td>
+				<td><code>"auth-token": "AAA.BBB.CCC"</code></td>
+					</tr>
+					<tr>
+						<th scope="row">Body</th>
+						<td>required</td>
+						<td>
+							<code>
+						{<br/> 
+							&nbsp;&nbsp;"title": "Feedback home",<br/>
+							&nbsp;&nbsp;"feedback":"Ahahahaha"<br/>
+						}
+						</code>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Result</th>
+						<td>Successfully</td>
+						<td><code>{ <br/>
+					"status": 200,<br/>
+					"msg": "Feedback success"<br/>
+				}</code></td>
+					</tr>
+					<tr>
+						<th scope="row">Result</th>
+						<td>Failed</td>
+						<td><code>{ <br/>
+					"status" : 401,<br/>
+					"msg" : "Feedback failed" <br/>
 				}
 				</code></td>
 					</tr>
@@ -709,13 +814,9 @@
 						<td><code>{ <br/>
 								"status": 200,<br/>
 								"user": {<br/>
+									&nbsp;&nbsp;&nbsp;&nbsp;"token": "AAA.BBB.CCC",<br/>
 									&nbsp;&nbsp;&nbsp;&nbsp;"_id": "5efc8e8ea0358c106cd8c38d",<br/>
-									&nbsp;&nbsp;&nbsp;&nbsp;"username": "abc3",<br/>
-									&nbsp;&nbsp;&nbsp;&nbsp;"firstname": "abc",<br/>
-									&nbsp;&nbsp;&nbsp;&nbsp;"lastname": "efg",<br/>
-									&nbsp;&nbsp;&nbsp;&nbsp;"email": "abc2@gmail.com",<br/>
-									&nbsp;&nbsp;&nbsp;&nbsp;"__v": 0<br/>
-									&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+									&nbsp;&nbsp;&nbsp;&nbsp;"username": "abc"<br/>
 							}</code>
 						</td>
 					</tr>
@@ -753,6 +854,12 @@
 					</tr>
 					<tr>
 						<th scope="row">emit</th>
+						<td>reconnect</td>
+						<td>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">emit</th>
 						<td>find-partner</td>
 						<td>
 						</td>
@@ -768,14 +875,14 @@
 					<tr>
 						<th scope="row">emit</th>
 						<td>send-message</td>
-						<td> {DATA}
+						<td> {RoomId, content}
 						</td>
 					</tr>
 
 					<tr>
 						<th scope="row">ON</th>
 						<td>new-message</td> 
-						<td> 
+						<td> {username, message}
 						</td>
 					</tr>
 

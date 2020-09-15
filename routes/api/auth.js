@@ -46,7 +46,7 @@ function validatePass(res, password, user) {
         username: user.username
       },
       config.get("jwtSecret"),
-      { expiresIn: 86400 },
+      { expiresIn: 8640000 },
       (err, token) => {
         if (err) {
           console.log("failed valid jwt");
@@ -121,7 +121,7 @@ router.post("/facebook", async (req, res, next) => {
           jwt.sign(
             { id: user.id, username: user.username },
             config.get("jwtSecret"),
-            { expiresIn: 86400 },
+            { expiresIn: 8640000 },
             (err, token) => {
               if (err) {
                 console.log("failed bcrypt jwt");
@@ -149,7 +149,7 @@ router.post("/facebook", async (req, res, next) => {
         jwt.sign(
           { id: user.id, username: user.username },
           config.get("jwtSecret"),
-          { expiresIn: 86400 },
+          { expiresIn: 8640000 },
           (err, token) => {
             if (err) {
               console.log("failed bcrypt jwt");

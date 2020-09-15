@@ -91,9 +91,10 @@
             <input id="intext" type="text" class="form-control" placeholder="Nhập..." aria-label="Recipient's username"
               aria-describedby="basic-addon2">
             <div class="input-group-append">
-              <button class="btn btn-outline-secondary" id="click">Button</button>
+              <button class="btn btn-outline-secondary" id="click">Send</button>
             </div>
             <button class="btn btn-outline-secondary" id="findpartner">Tìm</button>
+            <button class="btn btn-outline-secondary" id="leave">Leave</button>
           </div>
         </div>
 
@@ -129,7 +130,7 @@
   <script src="style.js"></script>
   <script>
     const tk = localStorage.getItem("jwtToken");
-    var socket = io("http://banhbaoapp.com/", { query: 'token=' + tk });
+    var socket = io("http://localhost:81/", { query: 'token=' + tk });
 
     socket.on("all-message", function (data) {
       var msg = document.getElementById("areMsg").value;
@@ -140,14 +141,16 @@
     $(document).ready(function () {
 
 
+      let currentRoomId = "";
       $("#findpartner").click(function () {
         console.log('find-click');
 
         socket.emit("find-partner", "alalo");
 
         socket.on('joined-to-room', function ({ roomId }) {
+
           $.ajax({
-            url: `http://banhbaoapp.com/api/messages/rooms/${roomId}`,
+            url: `http://localhost:81/api/messages/rooms/${roomId}`,
             type: 'GET',
             dataType: 'json',
             headers: {
@@ -155,16 +158,21 @@
             },
             contentType: 'application/json; charset=utf-8',
             success: function (result) {
-              console.log(`http://banhbaoapp.com/api/messages/rooms/${roomId}`, result);
+              console.log(`http://localhost:81/api/messages/rooms/${roomId}`, result);
             },
             error: function (error) {
               console.log(error);
             }
           });
           console.log('joined-to-room');
+
+          currentRoomId = roomId;
+
           $("#click").click(function () {
+            // check ddax join vao room chua
+
             const msg = {
-              roomId,
+              currentRoomId,
               content: document.getElementById("intext").value
             };
             document.getElementById("intext").value = "";
@@ -173,12 +181,28 @@
 
           });
 
-          socket.on('new-message', message => {
+          $('#leave').click(function () {
 
+            console.log('currentRoomId', currentRoomId);
+            if (!currentRoomId)
+              return;
+            console.log('currentRoomId', currentRoomId);
+            socket.emit('leave-room', currentRoomId);
+            currentRoomId = "";
+          });
+
+          socket.on('new-message', message => {
             console.log('new message', message);
+          });
+
+          socket.on('partner-left', (roomId) => {
+
+            console.log('partner thoast roy',roomId);
           });
         });
       });
+
+
     });
   </script>
 </body>

@@ -35,9 +35,13 @@ const RoomDetailsSchema = new Schema({
   }]
 });
 
+RoomDetailsSchema.statics.findRoom = async function (members) {
+  let Room = await RoomDetails.findOne({status:0}).where('members').in(members);
+  return Room;
+}
 
 RoomDetailsSchema.statics.findRoomOrCreateOneWithMembers = async function (members) {
-  let resultRoom = await RoomDetails.findOne({}).where('members').in(members);
+  let resultRoom = await RoomDetails.findOne({status: 0 }).where('members').in(members);
   if (!resultRoom) {
     resultRoom = await RoomDetails.create({ status: 0, members: members });
   }
