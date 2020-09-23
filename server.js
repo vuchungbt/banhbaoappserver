@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const https = require('https');
 const fs = require('fs');
 const morgan = require('morgan');
-
+const path = require('path');
 const config = require('config');
 var cors = require('cors');
 
@@ -16,6 +16,7 @@ const help = require("./routes/api/help")
 const app = express();
 
 app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, '/')));
 app.set('view engine', 'ejs');
 app.set('views', './views');
 app.use(morgan('tiny'));
