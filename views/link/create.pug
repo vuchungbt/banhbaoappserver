@@ -1,0 +1,20 @@
+extends ../template
+block content
+    h2 Create link
+
+    form(action="/admin/link/create" method="POST")
+        .form-group
+            label(for='exampleFormControlInput1') Name
+            input#exampleFormControlInput1.form-control(type='text' name="name" placeholder='Nhập tên link' required)
+            if mess
+               p=mess
+        .form-group
+            label(for='exampleFormControlInput1') Link
+            input#exampleFormControlInput1.form-control(type='text' name="link" placeholder='Nhập link' required)
+            span(id='mess')
+        .form-group
+            label(for='exampleFormControlTextarea1') Description
+            textarea#exampleFormControlTextarea1.form-control(rows='3' name="description")
+        button.btn.btn-primary.mt-5.mr-5(type='submit') Save
+        button.btn.btn-primary.mt-5.ml-5.mr-5(type='reset') Reset
+        a.btn.btn-danger.ml-5.mt-5(href='/admin/link') Cancel

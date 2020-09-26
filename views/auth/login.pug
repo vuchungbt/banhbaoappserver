@@ -1,0 +1,13 @@
+link#bootstrap-css(href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css', rel='stylesheet')
+script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js')
+script(src='//code.jquery.com/jquery-1.11.1.min.js')
+link(rel='stylesheet', href='/../css/login.css')
+.container
+  .card.card-container
+    img#profile-img.profile-img-card(src='//ssl.gstatic.com/accounts/ui/avatar_2x.png')
+    p#profile-name.profile-name-card
+    form(action="/admin/auth/login" method="POST").form-signin
+      span#reauth-email.reauth-email
+      input#inputEmail.form-control(type='text', placeholder='username',name='username' required='', autofocus='')
+      input#inputPassword.form-control(type='password', placeholder='Password',name= 'password', required='')
+      button.btn.btn-lg.btn-primary.btn-block.btn-signin(type='submit') Sign in

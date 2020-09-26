@@ -1,0 +1,30 @@
+extends ../template
+block content
+    div(style='margin-top:40px')
+        h1 Danh Sách Link
+        a.btn.btn-primary(href='/admin/link/create' role='button') Create
+        //- a.btn.btn-primary.ml-5(href='/home/sort' role='button') Sắp xếp 
+        br
+        br
+        table#table-id.table.table-striped.table-bordered
+            thead
+                tr
+                    th Name
+                    th link
+                    th description
+                    th Sửa
+                    th Xoá
+            tbody
+                each link in links
+                    tr
+                        td=link.name
+                        td=link.link
+                        td=link.description
+                        td
+                            a.btn.btn-info(href="/admin/link/update/" + link._id) ...
+                        td
+                            a.btn.btn-danger.ml-5(href='/admin/link/delete/'+link._id role='button') x
+    script.
+        $(document).ready(function() {
+            $('#table-id').DataTable( );
+        } );
