@@ -26,16 +26,16 @@ module.exports.validate = async(req, res, next) => {
     res.cookie("token", token, {
         httpOnly: true,
         maxAge: 1800000,
-        // signed: true
+        signed: true
     });
     next();
 }
 
 module.exports.logged = async(req, res, next) => {
-    const token = req.cookies.token;
+    const token = req.signedCookies.token;
     if (!token || token == "null" || token == "" || token == null || token == undefined) {
         console.log("no token");
-        res.redirect("/admin/auth/login");
+        return res.redirect("/admin/auth/login");
     }
     try {
         const decodedToken = jwt.verify(token, config.get("jwtSecret"));

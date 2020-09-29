@@ -1,6 +1,6 @@
 extends ../template
 block content
-    div(style='margin-top:40px')
+    div(style='margin-top:20px')
         h1 Danh Sách Link
         a.btn.btn-primary(href='/admin/link/create' role='button') Create
         //- a.btn.btn-primary.ml-5(href='/home/sort' role='button') Sắp xếp 
@@ -24,7 +24,27 @@ block content
                             a.btn.btn-info(href="/admin/link/update/" + link._id) ...
                         td
                             a.btn.btn-danger.ml-5(href='/admin/link/delete/'+link._id role='button') x
+ 
     script.
-        $(document).ready(function() {
-            $('#table-id').DataTable( );
+        $(document).ready(function() {  
+            $('#table-id').DataTable( {
+                "columnDefs": [
+                { "width": "10", "targets": 0 },
+                { "width": "70", "targets": 1 },
+                { "width": "70", "targets": 2 },
+                { "width": "5", "targets": 3 },
+                { "width": "5", "targets": 4 },
+            ]
         } );
+        });
+    style.
+        .table{
+            margin: 5px 5px 5px 5px;
+            width: 97%;
+            clear: both;
+            border-collapse: collapse;
+            table-layout: fixed; 
+            word-wrap:break-word; 
+            white-space: normal;
+            word-break:break-all;
+        }

@@ -1,7 +1,7 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const https = require('https');
 const fs = require('fs');
+const path = require("path");
 const morgan = require('morgan');
 const config = require('config');
 const mongo = require("./config/mongo");
@@ -15,11 +15,12 @@ const bodyParser = require("body-parser")
 const authAdmin = require('./routes/admin/auth');
 const user = require("./routes/admin/user")
 const link = require("./routes/admin/link")
-
+const feedback = require("./routes/admin/feedback");
 
 const app = express();
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, "js")));
 app.set('view engine', 'ejs');
 app.set('view engine', 'pug');
 app.set('views', './views');
@@ -82,4 +83,5 @@ app.use('/api/auth', auth);
 app.use('/api/messages', message);
 app.use('/admin/auth', authAdmin);
 app.use("/admin/user", user);
-app.use("/admin/link", link)
+app.use("/admin/link", link);
+app.use("/admin/feedback", feedback);

@@ -833,6 +833,63 @@
                     </tr>
                     </tbody>
             </table>
+            <!--get link group or cfs-->
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <div class="alert alert-success" role="alert">#Group and confession</div>
+                        </th>
+                        <td>Post</td>
+                        <td><code>/api/user/getlinkconfessionorgroupfb</pre></td>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<th scope="row">Header</th>
+				<td>application/json; charset=utf-8</td>
+				<td><code>"auth-token": "AAA.BBB.CCC"</code></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Body</th>
+                        <td>required</td>
+                        <td>
+                            <code>
+						{<br/> 
+							&nbsp;&nbsp;"name": "group",<br/>
+                        }
+                        or
+                        {<br/> 
+							&nbsp;&nbsp;"name": "confession",<br/>
+						}
+						</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Result</th>
+                        <td>Successfully</td>
+                        <td><code>{ <br/>
+                            "status": 200,<br/>
+                            "link": { <br/>
+                                "_id": "5f6f14af4b52f61e846be933",<br/>
+                                "name": "group",<br/>
+                                "link": "abc.xxx",<br/>
+                                "description": "day la link group",<br/>
+                                "__v": 0<br/>
+                            }<br/>
+				}</code></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Result</th>
+                        <td>Failed</td>
+                        <td><code>{ <br/>
+                            "status": 404,<br/>
+                            "msg": "Link group not found"<br/>
+				}
+				</code></td>
+                    </tr>
+                    </tbody>
+            </table>
 
 
 
@@ -930,7 +987,24 @@
                             <strong>type </strong> [send-report/ send-heart/ leave-room/ token/ find-partner/ send-message/]
                         </td>
                     </tr>
-
+                    <tr>
+                        <th scope="row">On</th>
+                        <td>blocking</td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">On</th>
+                        <td>warning</td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">On</th>
+                        <td>ban-user</td>
+                        <td>
+                        </td>
+                    </tr>
                     </tbody>
             </table>
 
