@@ -1,0 +1,43 @@
+extends ../template
+block content
+    
+    div(style='margin-top:20px')
+        h1 Danh Sách Help
+        a.btn.btn-primary(href='/admin/help/create' role='button') Create
+        br
+        br
+        table#table-id.table.table-striped.table-bordered
+            thead
+                tr
+                    th Title
+                    th Description
+                    th Link
+                    th Edit
+                    th Delete
+            tbody
+                each help in helps
+                    tr
+                        td=help.title
+                        td=help.description
+                        td=help.link
+                        td
+                            a.btn.btn-info(href="/admin/help/update/" + help._id) ...
+                        td
+                            a.btn.btn-danger.ml-5(href='/admin/help/delete/'+help._id role='button') x
+    
+    script.
+        $(document).ready(function() {  
+            $('#table-id').DataTable(  );
+        });
+
+    style.
+        .table{
+            margin: 5px 5px 5px 5px;
+            width: 95%;
+            clear: both;
+            border-collapse: collapse;
+            table-layout: fixed;
+            word-wrap:break-word; 
+            white-space: normal;
+            word-break:break-all;
+        }

@@ -1,0 +1,20 @@
+extends ../template
+block content
+   
+    .form(style="text-align: center;")
+        h2 Create Help
+        form(action="/admin/help/create" method="POST")(style ="width : 500px; display: inline-block;")
+            .form-group
+                label(for='exampleFormControlInput1') Title
+                input#exampleFormControlInput1.form-control(type='text' name="title" placeholder='Nhập title' required)
+            .form-group
+                label(for='exampleFormControlInput1') Link
+                input#exampleFormControlInput1.form-control(type='text' name="link" placeholder='Nhập help' required)
+            .form-group
+                label(for='exampleFormControlTextarea1') Description
+                textarea#exampleFormControlTextarea1.form-control(rows='3' name="description" required)
+            if mess
+                p=mess
+            button.btn.btn-primary.mt-5.mr-5(type='submit') Save
+            button.btn.btn-primary.mt-5.ml-5.mr-5(type='reset') Reset
+            a.btn.btn-danger.ml-5.mt-5(href='/admin/help') Cancel
