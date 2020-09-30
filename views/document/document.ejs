@@ -840,7 +840,7 @@
                         <th scope="col">
                             <div class="alert alert-success" role="alert">#Group and confession</div>
                         </th>
-                        <td>Post</td>
+                        <td>Get</td>
                         <td><code>/api/user/getlinkconfessionorgroupfb</pre></td>
 			</tr>
 			</thead>
@@ -852,16 +852,9 @@
                     </tr>
                     <tr>
                         <th scope="row">Body</th>
-                        <td>required</td>
+                        <td>None</td>
                         <td>
                             <code>
-						{<br/> 
-							&nbsp;&nbsp;"name": "group",<br/>
-                        }
-                        or
-                        {<br/> 
-							&nbsp;&nbsp;"name": "confession",<br/>
-						}
 						</code>
                         </td>
                     </tr>
@@ -869,22 +862,31 @@
                         <th scope="row">Result</th>
                         <td>Successfully</td>
                         <td><code>{ <br/>
-                            "status": 200,<br/>
-                            "link": { <br/>
-                                "_id": "5f6f14af4b52f61e846be933",<br/>
-                                "name": "group",<br/>
-                                "link": "abc.xxx",<br/>
-                                "description": "day la link group",<br/>
-                                "__v": 0<br/>
-                            }<br/>
-				}</code></td>
+                            &nbsp;&nbsp;&nbsp;&nbsp; "status": 200,<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp; "links": [<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+                                &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;"description": "this is link group................",<br/>
+                                &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;"_id": "5f74826c7690b13168498660",<br/>
+                                &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;"name": "group",<br/>
+                                &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;"link": "facebook.com/banhbaoapp",<br/>
+                                &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;"__v": 0<br/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;},<br/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+                                    &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;"description": "this is link confession ......",<br/>
+                                    &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; "_id": "5f74839c1e7be71d84e00590",<br/>
+                                    &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; "name": "confession",<br/>
+                                    &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; "link": "facebook.com/banhbaoapp/cfs",<br/>
+                                    &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; "__v": 0<br/>
+                                    &nbsp;&nbsp;&nbsp;&nbsp; }<br/>
+                                    &nbsp;&nbsp;&nbsp;&nbsp; ]<br/>
+                        }</code></td>
                     </tr>
                     <tr>
                         <th scope="row">Result</th>
                         <td>Failed</td>
                         <td><code>{ <br/>
                             "status": 404,<br/>
-                            "msg": "Link group not found"<br/>
+                            "msg": "Not Found"<br/>
 				}
 				</code></td>
                     </tr>

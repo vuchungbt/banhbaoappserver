@@ -264,40 +264,42 @@ router.post('/feedback', authMiddleware, (req, res) => {
 // @route POST api/user/getlinkconfessionorgroupfb
 // @desc get link confession or group
 // @access Public
-router.post('/getlinkconfessionorgroupfb', async(req, res) => {
-    const {
-        name
-    } = req.body;
+router.get('/getlinkconfessionorgroupfb', async(req, res) => {
 
-    if (name == 'group' || name == 'confession') {
-        getLinkGrouporConfession(name);
-    } else {
+
+    try {
+        const links = await Link.find({
+            $or: [{
+                name: {
+                    $eq: "group"
+                }
+            }, {
+                name: {
+                    $eq: "confession"
+                }
+            }]
+        });
+        console.log(links);
+        if (links.length != 0) {
+            res.status(200).json({
+                status: 200,
+                links
+            })
+        } else {
+            res.status(404).json({
+                status: 404,
+                msg: 'Not Found',
+            })
+        }
+    } catch (error) {
+        console.log(error);
         res.status(400).json({
             status: 400,
-            msg: "the name of the link is not 'group' or 'confession' ",
-        });
+            msg: 'Link group and confession failed',
+        })
     }
 
-    async function getLinkGrouporConfession(name) {
-        try {
-            const link = await Link.findOne({
-                name,
-            });
-            if (link) {
-                return res.status(200).json({
-                    status: 200,
-                    link,
-                });
-            } else {
-                return res.status(404).json({
-                    status: 404,
-                    msg: `Link ${name} not found`,
-                });
-            }
-        } catch (error) {
-            console.log(err);
-        }
-    }
+
 });
 
 module.exports = router;

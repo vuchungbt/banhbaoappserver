@@ -23,7 +23,7 @@ var data = fs.readFileSync("xref.txt", {
     encoding: 'utf8',
     flag: 'r'
 });
-var words = data.replace(/(\r\n|\n|\r)/gm, " ").split(" ");
+var words = data.replace(/(\r\n|\n|\r)/gm, "|").split("|");
 const connect = io => {
     io.on("connection", function(socket) {
         console.log("connection");
@@ -43,7 +43,6 @@ const connect = io => {
             } = decodedToken(token);
             socket.username = username;
             socket.userId = id;
-            console.log("zo");
             socket.on("find-partner", async(data) => {
                 let user = await User.findById({
                     _id: socket.userId
@@ -51,7 +50,7 @@ const connect = io => {
                 let time = new Date();
                 if (user.timeBlock > time) {
                     socket.to(socket.id).emit("blocking", "blocking");
-                    console.log("may deo dc join");
+                    console.log("user be blocked");
                     return;
                 }
                 console.log('find partner starting...');
@@ -146,15 +145,13 @@ const connect = io => {
                     })
                     console.log(user);
                     let report = user.report;
-                    console.log(report);
-                    let contentArr = message.content.split(" ");
-                    console.log(contentArr);
-                    for (let word of contentArr) {
-                        if (words.includes(word)) {
+                    for (let word of words) {
+                        if (message.content.includes(word)) {
                             report++;
                             break;
                         }
                     }
+
                     handleBlock(report, socket.id, socket.userId, r._id);
                     const messageCreatedResult = await MessageModel.sendMessageToRoom(trading, socket.userId, 'message', message.content, r._id);
                     io.to(messageCreatedResult.room_id).emit('new-message', messageCreatedResult);
@@ -172,7 +169,7 @@ const connect = io => {
             async function handleBlock(report, socketId, userId, roomId) {
 
                 if (report == 3) {
-                    socket.to(socketId).emit("warning", "Bạn đã sử dụng 3 lần từ ngữ thô tục");
+                    socket.to(socketId).emit("warning", "you had use 3 times forbidden words");
                     await User.findByIdAndUpdate({
                         _id: userId
                     }, {
@@ -180,7 +177,7 @@ const connect = io => {
                     });
                 }
                 if (report == 5) {
-                    socket.to(socketId).emit("warning", "Bạn đã sử dụng 5 lần từ ngữ thô tục 7 lần là ban 1h");
+                    socket.to(socketId).emit("warning", "you had use 3 times forbidden words, if 7 times you will block chat");
                     await User.findByIdAndUpdate({
                         _id: userId
                     }, {
@@ -197,7 +194,7 @@ const connect = io => {
                         timeBlock: time.addHours(1)
                     });
 
-                    socket.to(socketId).emit("ban-user", "mày vượt quá 7 lần rồi ban 1h nhé con trai");
+                    socket.to(socketId).emit("ban-user", "you had blocked 1h");
                     const r = await RoomDetails.findOne({
                         roomId
                     });
