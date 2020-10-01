@@ -432,16 +432,28 @@ router.post("/confirm", async(req, res) => {
     res.status(200).json({
         status: 200,
         mess: 'Confirm code',
-        userId: userId
+        // userId: userId
     });
 
 })
 
 router.post("/changepassword", async(req, res) => {
     const {
-        userId,
+        email,
+        code,
         password
     } = req.body;
+    const resetCode = await ResetPass.findOne({
+        email
+    });
+    enCode = resetCode.enCode;
+    const match = await bcrypt.compare(code, enCode);
+    if (!match) {
+        res.status(404).json({
+            status: 404,
+            mess: 'Code or email not found',
+        });
+    }
     bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(password, salt, async(err, hash) => {
             if (err) {
@@ -452,13 +464,13 @@ router.post("/changepassword", async(req, res) => {
                 });
             }
             try {
-                await User.findByIdAndUpdate({
-                    _id: userId
+                await User.findOneAndUpdate({
+                    email
                 }, {
                     password: hash
                 })
                 await ResetPass.findOneAndRemove({
-                    userId
+                    email
                 })
                 res.status(200).json({
                     status: 200,
@@ -468,7 +480,7 @@ router.post("/changepassword", async(req, res) => {
                 console.log(error);
                 res.status(404).json({
                     status: 404,
-                    msg: "userId not found",
+                    msg: "Code or email not found",
                 });
             }
         });

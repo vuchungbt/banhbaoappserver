@@ -26,7 +26,7 @@ app.set('view engine', 'ejs');
 app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(morgan('tiny'));
-//const server = require("http").Server(app);
+const server = require("http").Server(app);
 //const io = require("socket.io")(server);
 app.use(
     bodyParser.urlencoded({
@@ -35,10 +35,16 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use(cookieParser(config.get('jwtSecret')));
-const server = require('http').Server(app);
+// const server = require('http').Server(app);
+// const server = require("https").createServer({
+//     key: fs.readFileSync('./ssl/private.key'),
+//     cert: fs.readFileSync('./ssl/certificate.crt'),
+//     ca: [fs.readFileSync('./ssl/ca_bundle.crt')],
+// }, app);
+
 const io = require('socket.io')(server);
 const iohttps = require('socket.io')(https);
-server.listen(80, () => console.log('Started on port 3000...'));
+server.listen(80, () => console.log('Started on port 80...'));
 
 // connect(io);
 // connect(iohttps);
