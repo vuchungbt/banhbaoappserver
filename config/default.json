@@ -1,4 +1,6 @@
 {
     "mongoURI": "mongodb://localhost:27017/banhbaoapp",
-    "jwtSecret": "express session secret banhbaoapp"
+    "jwtSecret": "express session secret banhbaoapp",
+    "gmail": "noreply.hanhtrinhxanh@gmail.com",
+    "pass": "090512147963q!@#"
 }

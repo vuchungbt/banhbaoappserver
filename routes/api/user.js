@@ -3,11 +3,15 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const config = require('config');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+
 const authMiddleware = require('../../middleware/auth');
+
 const Link = require('../../models/Link');
 const User = require('../../models/User');
 const Feedback = require('../../models/Feedback');
-
+const ResetPass = require("../../models/resetPass");
+const ALPHABET = "0123456789ABCDEFGHIKLMNOPQRSTUVWXYZ";
 // @route POST api/user
 // @desc Create An User
 // @access Public
@@ -264,41 +268,211 @@ router.post('/feedback', authMiddleware, (req, res) => {
 // @route POST api/user/getlinkconfessionorgroupfb
 // @desc get link confession or group
 // @access Public
-router.get('/getlinkconfessionorgroupfb', async(req, res) => {
-
-
+router.get('/getlinkconfessionorgroupfb', authMiddleware, async(req, res) => {
     try {
         const links = await Link.find({
             $or: [{
-                name: {
-                    $eq: "group"
-                }
-            }, {
-                name: {
-                    $eq: "confession"
-                }
-            }]
+                    name: {
+                        $eq: 'group',
+                    },
+                },
+                {
+                    name: {
+                        $eq: 'confession',
+                    },
+                },
+            ],
         });
         console.log(links);
         if (links.length != 0) {
             res.status(200).json({
                 status: 200,
-                links
-            })
+                links,
+            });
         } else {
             res.status(404).json({
                 status: 404,
                 msg: 'Not Found',
-            })
+            });
         }
     } catch (error) {
         console.log(error);
         res.status(400).json({
             status: 400,
             msg: 'Link group and confession failed',
-        })
+        });
+    }
+});
+//random code
+
+
+function generate() {
+    let id = "";
+    for (let i = 0; i < 6; i++) {
+        id += ALPHABET.charAt(Math.floor(Math.random() * ALPHABET.length));
+    }
+    return id;
+}
+
+// @route POST api/user/resetPassword/:userId
+// @desc send code to email user
+// @access Public
+router.post('/resetpassword', async(req, res) => {
+    const email = req.body.email;
+    const resetPass = await ResetPass.find({
+        email
+    });
+    const user = await User.findOne({
+        email
+    });
+    _id = user._id;
+    const mailUser = email;
+    const code = generate();
+    if (resetPass.length != 0) {
+        bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(code, salt, async(err, hash) => {
+                if (err) {
+                    console.log(err);
+                    res.status(401).json({
+                        status: 401,
+                        msg: 'bcrypt code failed',
+                    });
+                }
+                await ResetPass.findOneAndUpdate({
+                    email
+                }, {
+                    enCode: hash
+                });
+            });
+        });
+
+    } else {
+        bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(code, salt, async(err, hash) => {
+                if (err) {
+                    console.log(err);
+                    res.status(401).json({
+                        status: 401,
+                        msg: 'bcrypt code failed',
+                    });
+                }
+                await ResetPass.create({
+                    email: mailUser,
+                    userId: _id,
+                    enCode: hash
+                });
+            });
+        });
+
+    }
+    try {
+        sendmail(mailUser, code);
+        res.status(200).json({
+            status: 200,
+            mess: 'Sent code',
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(401).json({
+            status: 401,
+            mess: "Sent code fail"
+        });
     }
 
+});
+
+
+async function sendmail(mailUser, code) {
+    let transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+            user: config.get("gmail"),
+            pass: config.get("pass"),
+        },
+    });
+    await transporter.sendMail({
+        from: config.get("gmail"),
+        to: mailUser,
+        subject: '[CODE RESET BanhBaoApp]',
+        text: `Code reset password: ${code}`,
+    });
+}
+
+
+router.post("/confirm", async(req, res) => {
+    const {
+        code,
+        email
+    } = req.body;
+    const resetCode = await ResetPass.findOne({
+        email
+    });
+    const user = await User.findOne({
+        email
+    });
+    const userId = user._id;
+
+    if (!resetCode) {
+        res.status(404).json({
+            status: 404,
+            mess: 'Code not found',
+        });
+    }
+    enCode = resetCode.enCode;
+    const match = await bcrypt.compare(code, enCode);
+    if (!match) {
+        res.status(400).json({
+            status: 400,
+            mess: 'Code Fail',
+        });
+    }
+    console.log(match);
+    res.status(200).json({
+        status: 200,
+        mess: 'Confirm code',
+        userId: userId
+    });
+
+})
+
+router.post("/changepassword", async(req, res) => {
+    const {
+        userId,
+        password
+    } = req.body;
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(password, salt, async(err, hash) => {
+            if (err) {
+                console.log(err);
+                res.status(401).json({
+                    status: 401,
+                    msg: 'bcrypt code failed',
+                });
+            }
+            try {
+                await User.findByIdAndUpdate({
+                    _id: userId
+                }, {
+                    password: hash
+                })
+                await ResetPass.findOneAndRemove({
+                    userId
+                })
+                res.status(200).json({
+                    status: 200,
+                    msg: "Changed password",
+                });
+            } catch (error) {
+                console.log(error);
+                res.status(404).json({
+                    status: 404,
+                    msg: "userId not found",
+                });
+            }
+        });
+    });
 
 });
 

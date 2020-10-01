@@ -9,7 +9,7 @@ const User = require("../../models/User");
 const {
     log
 } = require("console");
-const ALPHABET = "0123456789ABCDEFGHIKLMNOPQRSTUVWXYZ";
+
 
 const decodedToken = token => jwt.verify(token, config.get("jwtSecret"));
 

@@ -14,7 +14,7 @@ module.exports.validate = async(req, res, next) => {
     if (!admin) {
         res.render('auth/login.pug');
     }
-    const match = bcrypt.compare(password, admin.password);
+    const match = await bcrypt.compare(password, admin.password);
     if (!match) {
         res.render('auth/login.pug');
     }
