@@ -369,7 +369,7 @@ router.post('/resetpassword', async(req, res) => {
         sendmail(mailUser, code);
         res.status(200).json({
             status: 200,
-            mess: 'Sent code',
+            mess: 'We sent code to your email',
         });
     } catch (error) {
         console.log(error);

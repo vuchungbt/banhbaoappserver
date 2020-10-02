@@ -13,11 +13,12 @@ const auth = require('./routes/api/auth');
 const message = require('./routes/api/message');
 const bodyParser = require('body-parser');
 const authAdmin = require('./routes/admin/auth');
+const authloged = require("./middleware/authAdmin");
 const user = require('./routes/admin/user');
 const link = require('./routes/admin/link');
 const feedback = require('./routes/admin/feedback');
 const help = require("./routes/admin/help");
-
+const room = require("./routes/admin/room");
 const app = express();
 // app.use(cookieParser());
 app.use(express.static('public'));
@@ -63,8 +64,7 @@ https
 
 console.log('app is running on port ', port);
 connect(io);
-
-app.get('/admin', (req, res) => {
+app.get('/admin', authloged.logged, (req, res) => {
     res.render('template.pug');
 });
 app.get('/', function(req, res) {
@@ -81,7 +81,6 @@ app.use(express.json());
 app.use(cors());
 
 mongo.connect();
-
 app.use('/api/user', users);
 app.use('/api/auth', auth);
 app.use('/api/messages', message);
@@ -90,3 +89,4 @@ app.use('/admin/user', user);
 app.use('/admin/link', link);
 app.use('/admin/feedback', feedback);
 app.use("/admin/help", help);
+app.use("/admin/room", room);

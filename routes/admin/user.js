@@ -8,4 +8,7 @@ router.get("/", auth.logged, (req, res) => {
     })
 })
 
+async function countUserActive() {
+
+}
 module.exports = router;

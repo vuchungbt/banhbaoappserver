@@ -18,7 +18,7 @@ function getMessages(page) {
             }]
         })
         .limit(50)
-        .skip((page - 1) * 50)
+        .skip((page.page - 1) * 50)
         .sort({
             _id: -1
         });

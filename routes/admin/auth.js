@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 
 const Admin = require('../../models/Admin');
 const middlewareAdmin = require('../../middleware/authAdmin');
+const auth = require('../../middleware/auth');
+
 router.post('/register', async(req, res) => {
     let {
         username,
@@ -48,4 +50,9 @@ router.post('/login', middlewareAdmin.validate, async(req, res) => {
     res.redirect('/admin');
 });
 
+router.get("/logout", middlewareAdmin.logged, async(req, res) => {
+    res.clearCookie("token");
+    res.redirect("/admin/auth/login");
+
+})
 module.exports = router;

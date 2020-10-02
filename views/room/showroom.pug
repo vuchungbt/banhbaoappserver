@@ -1,0 +1,48 @@
+extends ../template
+block content
+    
+    div(style='margin-top:20px')
+        h1 Show Rooms
+        table.table.table-striped
+            thead
+                tr
+                th(scope='col') RoomID
+                th(scope='col') RoomID
+                th(scope='col') memberID_2
+                th(scope='col') Create_at
+            tbody
+                each room in rooms
+                    tr
+                        td
+                            a(href="")=room._id
+                        td=room.members[0]
+                        td=room.members[1]
+                        td=`${room.create_at.getDate()}/${room.create_at.getMonth()}/${room.create_at.getFullYear()}--${room.create_at.getHours()}:${room.create_at.getMinutes()}`
+
+       
+        nav(aria-label='Page navigation example')
+            ul.pagination
+                li.page-item
+                    a.page-link(href='#') Previous
+                each i in pages 
+                    li.page-item
+                        a.page-link(href='/admin/room/' + i)=i
+
+                li.page-item
+                    a.page-link(href='/admin/room/'+ currentPage ) Next
+    script.
+        $(document).ready(function() {  
+            $('#table-id').DataTable(  );
+        });
+
+    style.
+        .table{
+            margin: 5px 5px 5px 5px;
+            width: 95%;
+            clear: both;
+            border-collapse: collapse;
+            table-layout: fixed;
+            word-wrap:break-word; 
+            white-space: normal;
+            word-break:break-all;
+        }

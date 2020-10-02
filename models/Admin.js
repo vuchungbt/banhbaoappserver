@@ -12,9 +12,10 @@ const AdminSchema = new Schema({
         type: String,
         required: true,
     },
-    roles: [
-        "root"
-    ]
+    roles: {
+        type: String,
+        required: true
+    }
 });
 
 module.exports = User = mongoose.model("admin", AdminSchema);

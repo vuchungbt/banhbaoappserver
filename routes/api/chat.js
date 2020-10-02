@@ -19,6 +19,7 @@ Date.prototype.addHours = function(h) {
 };
 
 const clients = []; // awating
+let number = 0;
 var data = fs.readFileSync("xref.txt", {
     encoding: 'utf8',
     flag: 'r'
@@ -26,6 +27,9 @@ var data = fs.readFileSync("xref.txt", {
 var words = data.replace(/(\r\n|\n|\r)/gm, "|").split("|");
 const connect = io => {
     io.on("connection", function(socket) {
+        // number++;
+        // socket.emit("userActive", number);
+        console.log(number);
         console.log("connection");
 
         const token = socket.handshake.query.token;
