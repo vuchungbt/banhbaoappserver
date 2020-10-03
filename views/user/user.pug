@@ -1,50 +1,11 @@
 extends ../template
 block content
-    
-    div(style='margin-top:20px')
-        h1 Danh Sách FeedBack
-        //- a.btn.btn-primary(href='/admin/link/create' role='button') Create
-        br
-        br
-        p#number
-        //- table#table-id.table.table-striped.table-bordered
-        //-     thead
-        //-         tr
-        //-             th Title
-        //-             th Feedback
-        //-             th User_id
-        //-             th Time
-        //-             //- th Xoá
-        //-     tbody
-        //-         each room in rooms
-        //-             tr
-        //-                 td=feedback.title
-        //-                 td=feedback.feedback
-        //-                 td=feedback.user_id
-        //-                 td=`${feedback.time.getDate()}/${feedback.time.getMonth()}/${feedback.time.getFullYear()}--${feedback.time.getHours()}:${feedback.time.getMinutes()}`
-        //-                 //- td
-        //-                 //-     a.btn.btn-info(href="/admin/link/update/" + link._id) ...
-        //-                 //- td
-        //-                 //-     a.btn.btn-danger.ml-5(href='/admin/link/delete/'+link._id role='button') x
-    
-    script.
-        $(document).ready(function() {  
-            $('#table-id').DataTable(  );
-        });
-        //- let socket = io();
-        //- socket.on("userActive",(number)=>{
-        //-    document.getElementById("number").innerHTML = number;
-        //-    console.log(number);
-        //- })
-
-    style.
-        .table{
-            margin: 5px 5px 5px 5px;
-            width: 95%;
-            clear: both;
-            border-collapse: collapse;
-            table-layout: fixed;
-            word-wrap:break-word; 
-            white-space: normal;
-            word-break:break-all;
-        }
+    .form(style="text-align: center;")
+        h3 Search User by ID
+        form(action="/admin/user" method="POST")(style ="width : 500px; display: inline-block;")
+            .form-group
+                input.form-control(type='text', placeholder='Search',name="id" aria-label='Search' required)
+                if mess
+                    p=mess
+                button.btn.btn-primary.mt-5.mr-5(type='submit') Find
+        

@@ -1,0 +1,25 @@
+.container {
+    width: 500px;
+    height: 500;
+    background-color: rgb(147, 207, 207);
+    float: left;
+    padding: 10px;
+    /* margin: 0 auto; */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+p {
+    font-size: 20px;
+}
+
+span {
+    float: right;
+    font-size: 20px;
+}
+
+.btn {
+    text-align: center;
+}
