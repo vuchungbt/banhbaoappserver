@@ -7,14 +7,14 @@ block content
             thead
                 tr
                 th(scope='col') RoomID
-                th(scope='col') RoomID
+                th(scope='col') memberID_1
                 th(scope='col') memberID_2
                 th(scope='col') Create_at
             tbody
                 each room in rooms
                     tr
                         td
-                            a(href="")=room._id
+                            a(href="/admin/room/getmessages/"+room._id)=room._id
                         td=room.members[0]
                         td=room.members[1]
                         td=`${room.create_at.getDate()}/${room.create_at.getMonth()}/${room.create_at.getFullYear()}--${room.create_at.getHours()}:${room.create_at.getMinutes()}`
@@ -23,13 +23,13 @@ block content
         nav(aria-label='Page navigation example')
             ul.pagination
                 li.page-item
-                    a.page-link(href='#') Previous
+                    a.page-link(href='/admin/room/'+prevPage) Previous
                 each i in pages 
                     li.page-item
                         a.page-link(href='/admin/room/' + i)=i
 
                 li.page-item
-                    a.page-link(href='/admin/room/'+ currentPage ) Next
+                    a.page-link(href='/admin/room/'+ nextPage ) Next
     script.
         $(document).ready(function() {  
             $('#table-id').DataTable(  );

@@ -18,7 +18,7 @@ async function getMessages(request, response) {
         response.status(200).json({
             status: 200,
             //messages: messages.reverse()
-            messages: messages
+            messages: messages.reverse()
         });
     } catch (error) {
         console.log(error.message);

@@ -1,51 +1,16 @@
 extends ../template
 block content
-    div(style='margin-top:20px')
-        h1 Show Rooms
-    table#dtBasicExample.table.table-striped.table-bordered.table-sm(cellspacing='0', width='100%')
-    thead
-        tr
-        th.th-sm
-            | Name
-        th.th-sm
-            | Position
-        th.th-sm
-            | Office
-        th.th-sm
-            | Age
-        th.th-sm
-            | Start date
-        th.th-sm
-            | Salary
-    tbody
-        each room in rooms
-            tr
-                td=room._id
-                td=room.members[0]
-                td=room.members[1]
-                td=`${room.create_at.getDate()}/${room.create_at.getMonth()}/${room.create_at.getFullYear()}--${room.create_at.getHours()}:${room.create_at.getMinutes()}`
-                //- td
-                //-     a.btn.btn-info(href="/admin/link/update/" + link._id) ...
-                //- td
-                //-     a.btn.btn-danger.ml-5(href='/admin/link/delete/'+link._id role='button') x
-    tfoot
-        tr
-        th
-            | Name
-        th
-            | Position
-        th
-            | Office
-        th
-            | Age
-        th
-            | Start date
-        th
-            | Salary
-    script.
-        $(document).ready(function () {
-            $('#dtBasicExample').DataTable({
-            "pagingType": "simple" // "simple" option for 'Previous' and 'Next' buttons only
-            });
-            $('.dataTables_length').addClass('bs-select');
-        });
+    h3 Show messages
+        h5="Left: "+room.members[1]
+        h5="right: "+room.members[0]
+    .message_container.ex
+        .message_screen
+            each item in mess
+                if item.check
+                    .message__list
+                        .message__item.message__item--user
+                            span.message.message--user=item.content
+                else
+                    .message__list
+                        .message__item.message__item--bot
+                            span.message.message--bot=item.content
