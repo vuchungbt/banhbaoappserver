@@ -123,7 +123,7 @@ const connect = io => {
                             user2.save();
                             console.log('trading2>>', user2.trading);
                             console.log('joined-to-room successfully');
-                            const messageCreatedResult = await MessageModel.sendMessageToRoom(userToCreateRoom.userId, socket.userId, 'system', 'The conversation begins', room.roomId);
+                            const messageCreatedResult = await MessageModel.sendMessageToRoom(userToCreateRoom.userId, socket.userId, 'system', 'The conversation begins.\nSay \'bye\' to end conversation', room.roomId);
                             io.to(room.roomId).emit('new-message', messageCreatedResult);
                         } catch (e) {
                             socket.emit('error', {

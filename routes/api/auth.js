@@ -1,45 +1,40 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const bcrypt = require("bcryptjs");
-const config = require("config");
-const jwt = require("jsonwebtoken");
-const authMiddleware = require("../../middleware/auth");
-const axios = require("axios");
+const bcrypt = require('bcryptjs');
+const config = require('config');
+const jwt = require('jsonwebtoken');
+const authMiddleware = require('../../middleware/auth');
+const axios = require('axios');
 //Model
-const User = require("../../models/User");
+const User = require('../../models/User');
 
-const facebookApi = "https://graph.facebook.com/me?fields=email,birthday,link,first_name,id,last_name,gender,picture&access_token=";
+const facebookApi = 'https://graph.facebook.com/me?fields=email,birthday,link,first_name,id,last_name,gender,picture&access_token=';
 
 // @route POST api/auth
 // @desc Authenticate An User
 // @access Public
-router.post("/", (req, res) => {
-    console.log("Login body", req.body);
-    let {
-        username,
-        password
-    } = req.body;
+router.post('/', (req, res) => {
+    console.log('Login body', req.body);
+    let { username, password } = req.body;
     //Simple validation
     if (!username || !password) {
-        return res
-            .status(400)
-            .json({
-                status: "400",
-                msg: "Please enter both username and password!"
-            });
+        return res.status(400).json({
+            status: '400',
+            msg: 'Please enter both username and password!',
+        });
     }
 
     username = username.toLowerCase();
 
     //Check for existing user
     User.findOne({
-        username
-    }).then(user => {
+        username,
+    }).then((user) => {
         if (!user) {
-            console.log("user not exist");
+            console.log('user not exist');
             return res.status(401).json({
                 status: 401,
-                msg: "User does not exists"
+                msg: 'User does not exists',
             });
         } else {
             validatePass(res, password, user);
@@ -49,39 +44,37 @@ router.post("/", (req, res) => {
 
 function validatePass(res, password, user) {
     //Validate password
-    bcrypt.compare(password, user.password).then(isMatch => {
-        if (!isMatch) return res.status(401).json({
-            status: 401,
-            msg: "Password is incorect!"
-        });
+    bcrypt.compare(password, user.password).then((isMatch) => {
+        if (!isMatch)
+            return res.status(401).json({
+                status: 401,
+                msg: 'Password is incorect!',
+            });
         jwt.sign({
                 id: user.id,
-                username: user.username
+                username: user.username,
             },
-            config.get("jwtSecret"), {
-                expiresIn: 8640000
+            config.get('jwtSecret'), {
+                expiresIn: 8640000,
             },
             (err, token) => {
                 if (err) {
-                    console.log("failed valid jwt");
-                    res.status(401)
-                        .json({
-                            status: 401,
-                            msg: "failed valid token"
-                        });
-                };
+                    console.log('failed valid jwt');
+                    res.status(401).json({
+                        status: 401,
+                        msg: 'failed valid token',
+                    });
+                }
                 const responseUser = {
                     token,
                     _id: user._id,
-                    username: user.username
+                    username: user.username,
                 };
-                res.status(200)
-                    .json({
-                        status: 200,
-                        user: responseUser
-                    });
-
-            }
+                res.status(200).json({
+                    status: 200,
+                    user: responseUser,
+                });
+            },
         );
     });
 }
@@ -89,19 +82,18 @@ function validatePass(res, password, user) {
 // @route POST api/auth/me
 // @desc Get user data
 // @access Private
-router.get("/me", authMiddleware, (req, res) => {
+router.get('/me', authMiddleware, (req, res) => {
     User.findById(req.user.id)
-        .select("-password")
-        .then(User => {
+        .select('-password')
+        .then((User) => {
             res.json({
                 status: 200,
-                User
+                User,
             });
         });
 });
-router.post("/facebook", async(req, res, next) => {
+router.post('/facebook', async(req, res, next) => {
     try {
-
         const accessToken = req.body.access_token;
         const url = facebookApi + accessToken;
         const datares = await axios.get(url);
@@ -111,95 +103,88 @@ router.post("/facebook", async(req, res, next) => {
         if (!datajson) {
             res.json({
                 status: 401,
-                msg: "Auth failed",
+                msg: 'Auth failed',
             });
         }
         console.log('datajson', datajson);
         //Check for existing user
         User.findOne({
-            facebook_id: datajson.id
-        }).then(user => {
+            facebook_id: datajson.id,
+        }).then((user) => {
             if (!user) {
-                console.log("user first login");
+                console.log('user first login');
                 const newUser = new User({
-                    username: "",
+                    username: '',
                     firstname: datajson.firstname,
                     lastname: datajson.lastname,
                     email: datajson.email,
                     gender: datajson.gender,
                     dob: datajson.birthday,
                     facebook_id: datajson.id,
-                    picture: datajson.picture.data.url
+                    picture: datajson.picture.data.url,
                 });
-                newUser.save().then(user => {
+                newUser.save().then((user) => {
                     jwt.sign({
                             id: user.id,
-                            username: user.username
+                            username: user.username,
                         },
-                        config.get("jwtSecret"), {
-                            expiresIn: 8640000
+                        config.get('jwtSecret'), {
+                            expiresIn: 8640000,
                         },
                         (err, token) => {
                             if (err) {
-                                console.log("failed bcrypt jwt");
-                                res.status(401)
-                                    .json({
-                                        status: 401,
-                                        msg: "jwt failed"
-                                    });
-                            };
-                            res.status(200)
-                                .json({
-                                    status: 200,
-                                    first: 1,
-                                    user: {
-                                        token,
-                                        _id: user.id,
-                                        username: user.username
-                                    }
-                                });
-                        }
-                    );
-                });
-
-
-            } else {
-                jwt.sign({
-                        id: user.id,
-                        username: user.username
-                    },
-                    config.get("jwtSecret"), {
-                        expiresIn: 8640000
-                    },
-                    (err, token) => {
-                        if (err) {
-                            console.log("failed bcrypt jwt");
-                            res.status(401)
-                                .json({
+                                console.log('failed bcrypt jwt');
+                                res.status(401).json({
                                     status: 401,
-                                    msg: "jwt failed"
+                                    msg: 'jwt failed',
                                 });
-                        };
-                        res.status(200)
-                            .json({
+                            }
+                            res.status(200).json({
                                 status: 200,
                                 first: 1,
                                 user: {
+                                    token,
                                     _id: user.id,
                                     username: user.username,
-                                    token
-                                }
+                                },
                             });
-                    }
+                        },
+                    );
+                });
+            } else {
+                jwt.sign({
+                        id: user.id,
+                        username: user.username,
+                    },
+                    config.get('jwtSecret'), {
+                        expiresIn: 8640000,
+                    },
+                    (err, token) => {
+                        if (err) {
+                            console.log('failed bcrypt jwt');
+                            res.status(401).json({
+                                status: 401,
+                                msg: 'jwt failed',
+                            });
+                        }
+                        res.status(200).json({
+                            status: 200,
+                            first: 0,
+                            user: {
+                                _id: user.id,
+                                username: user.username,
+                                token,
+                            },
+                        });
+                    },
                 );
             }
         });
-
     } catch (err) {
         console.log(err);
         res.json({
             status: 401,
-            msg: "Auth failed",
+            msg: 'Auth failed',
         });
     }
 });

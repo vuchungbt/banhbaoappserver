@@ -6,17 +6,18 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 
 const authMiddleware = require('../../middleware/auth');
-
+const validate = require("../../middleware/validate");
 const Link = require('../../models/Link');
 const User = require('../../models/User');
 const Feedback = require('../../models/Feedback');
-const ResetPass = require("../../models/resetPass");
-const ALPHABET = "0123456789ABCDEFGHIKLMNOPQRSTUVWXYZ";
+const ResetPass = require('../../models/resetPass');
+const ALPHABET = '0123456789ABCDEFGHIKLMNOPQRSTUVWXYZ';
+
 // @route POST api/user
 // @desc Create An User
 // @access Public
-router.post('/', (req, res) => {
-    console.log('Register body :', req.body);
+
+router.post('/', validate.valiEmailUser, (req, res) => {
 
     let {
         username,
@@ -28,36 +29,19 @@ router.post('/', (req, res) => {
         gender
     } = req.body;
 
-    //Simple validation
-    if (!username || !password) {
-        return res.status(400).json({
-            status: 400,
-            msg: 'Please enter both username and password!',
-        });
-    }
-    username = username.toLowerCase();
 
-    //Check for existing user
-    User.findOne({
+
+    const newUser = new User({
         username,
-    }).then((user) => {
-        if (user) {
-            return res.status(400).json({
-                status: 400,
-                msg: 'User already exists',
-            });
-        }
-        const newUser = new User({
-            username,
-            password,
-            firstname,
-            lastname,
-            email,
-            gender,
-            dob,
-        });
-        createUser(res, newUser);
+        password,
+        firstname,
+        lastname,
+        email,
+        gender,
+        dob,
     });
+    createUser(res, newUser);
+
 });
 
 function createUser(res, newUser) {
@@ -305,9 +289,8 @@ router.get('/getlinkconfessionorgroupfb', authMiddleware, async(req, res) => {
 });
 //random code
 
-
 function generate() {
-    let id = "";
+    let id = '';
     for (let i = 0; i < 6; i++) {
         id += ALPHABET.charAt(Math.floor(Math.random() * ALPHABET.length));
     }
@@ -320,10 +303,10 @@ function generate() {
 router.post('/resetpassword', async(req, res) => {
     const email = req.body.email;
     const resetPass = await ResetPass.find({
-        email
+        email,
     });
     const user = await User.findOne({
-        email
+        email,
     });
     _id = user._id;
     const mailUser = email;
@@ -339,13 +322,12 @@ router.post('/resetpassword', async(req, res) => {
                     });
                 }
                 await ResetPass.findOneAndUpdate({
-                    email
+                    email,
                 }, {
-                    enCode: hash
-                });
+                    enCode: hash,
+                }, );
             });
         });
-
     } else {
         bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(code, salt, async(err, hash) => {
@@ -359,11 +341,10 @@ router.post('/resetpassword', async(req, res) => {
                 await ResetPass.create({
                     email: mailUser,
                     userId: _id,
-                    enCode: hash
+                    enCode: hash,
                 });
             });
         });
-
     }
     try {
         sendmail(mailUser, code);
@@ -375,12 +356,10 @@ router.post('/resetpassword', async(req, res) => {
         console.log(error);
         res.status(401).json({
             status: 401,
-            mess: "Sent code fail"
+            mess: 'Sent code fail',
         });
     }
-
 });
-
 
 async function sendmail(mailUser, code) {
     let transporter = nodemailer.createTransport({
@@ -388,29 +367,28 @@ async function sendmail(mailUser, code) {
         port: 465,
         secure: true,
         auth: {
-            user: config.get("gmail"),
-            pass: config.get("pass"),
+            user: config.get('gmail'),
+            pass: config.get('pass'),
         },
     });
     await transporter.sendMail({
-        from: config.get("gmail"),
+        from: config.get('gmail'),
         to: mailUser,
-        subject: '[CODE RESET BanhBaoApp]',
-        text: `Code reset password: ${code}`,
+        subject: config.get("subject"),
+        text: config.get("text") + code
     });
 }
 
-
-router.post("/confirm", async(req, res) => {
+router.post('/confirm', async(req, res) => {
     const {
         code,
         email
     } = req.body;
     const resetCode = await ResetPass.findOne({
-        email
+        email,
     });
     const user = await User.findOne({
-        email
+        email,
     });
     const userId = user._id;
 
@@ -434,17 +412,16 @@ router.post("/confirm", async(req, res) => {
         mess: 'Confirm code',
         // userId: userId
     });
+});
 
-})
-
-router.post("/changepassword", async(req, res) => {
+router.post('/changepassword', async(req, res) => {
     const {
         email,
         code,
         password
     } = req.body;
     const resetCode = await ResetPass.findOne({
-        email
+        email,
     });
     enCode = resetCode.enCode;
     const match = await bcrypt.compare(code, enCode);
@@ -465,27 +442,26 @@ router.post("/changepassword", async(req, res) => {
             }
             try {
                 await User.findOneAndUpdate({
-                    email
+                    email,
                 }, {
-                    password: hash
-                })
+                    password: hash,
+                }, );
                 await ResetPass.findOneAndRemove({
-                    email
-                })
+                    email,
+                });
                 res.status(200).json({
                     status: 200,
-                    msg: "Changed password",
+                    msg: 'Changed password',
                 });
             } catch (error) {
                 console.log(error);
                 res.status(404).json({
                     status: 404,
-                    msg: "Code or email not found",
+                    msg: 'Code or email not found',
                 });
             }
         });
     });
-
 });
 
 module.exports = router;

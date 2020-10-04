@@ -70,19 +70,24 @@ router.get("/update/:_id", auth.logged, async(req, res) => {
 
 router.post("/update/:_id", auth.logged, async(req, res) => {
     const _id = req.params._id;
-    console.log(_id);
     const {
         link,
         name,
         description
     } = req.body;
-    const l = await Link.findOne({
-        name
+    const l = await Link.find({
+        name,
+        _id: {
+            $ne: _id
+        }
     });
-    if (l) {
+    const linkcurrent = await Link.findOne({
+        _id
+    });
+    if (l.length != 0) {
         res.render("link/update.pug", {
             mess: "Tên link đã tồn tại",
-            link: l
+            link: linkcurrent
         })
     } else {
         await Link.findByIdAndUpdate({
