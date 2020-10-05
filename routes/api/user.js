@@ -158,7 +158,9 @@ router.post('/password', authMiddleware, (req, res) => {
         });
     }
 
-    User.findById(_id).then((user) => {
+    User.findById({
+        _id
+    }).then((user) => {
         if (!user) {
             console.log('user not exist');
             return res.status(401).json({

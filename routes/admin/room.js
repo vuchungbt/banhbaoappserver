@@ -39,6 +39,8 @@ router.get('/getmessages/:_id', async(req, res) => {
     }, {
         content: 1,
         sender: 1,
+        created_at: 1
+
     }, );
     const room = await Room.findById({
         _id: room_id,
@@ -51,6 +53,7 @@ router.get('/getmessages/:_id', async(req, res) => {
                 _id: item._id,
                 sender: item.sender,
                 content: item.content,
+                created_at: item.created_at,
                 check: 1,
             };
         } else {
@@ -58,11 +61,12 @@ router.get('/getmessages/:_id', async(req, res) => {
                 _id: item._id,
                 sender: item.sender,
                 content: item.content,
+                created_at: item.created_at,
+
             };
         }
         mess.push(a);
     }
-    console.log(mess);
     res.render('room/room.pug', {
         mess,
         room,

@@ -4,7 +4,7 @@ const router = express.Router();
 const auMiddleware = require("../../middleware/auth");
 const mongoose = require("mongoose");
 // get all helps
-router.get("/getAll", async(req, res) => {
+router.get("/getAll", auMiddleware, async(req, res) => {
     try {
         const helps = await Help.find();
         res.status(200).json({
@@ -22,7 +22,7 @@ router.get("/getAll", async(req, res) => {
 
 
 // get a help by _id
-router.get("/:_id", async(req, res) => {
+router.get("/:_id", auMiddleware, async(req, res) => {
     const _id = req.params._id;
     try {
         if (mongoose.Types.ObjectId.isValid(_id)) {

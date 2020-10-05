@@ -10,7 +10,11 @@ block content
                     .message__list
                         .message__item.message__item--user
                             span.message.message--user=item.content
+                                br
+                                span.time=`${item.created_at.getMonth()}/${item.created_at.getDate()}/${item.created_at.getFullYear()},${item.created_at.getHours()}:${item.created_at.getMinutes()}`
                 else
                     .message__list
                         .message__item.message__item--bot
                             span.message.message--bot=item.content
+                                br
+                                span.time=`${item.created_at.getMonth()}/${item.created_at.getDate()}/${item.created_at.getFullYear()},${item.created_at.getHours()}:${item.created_at.getMinutes()}`

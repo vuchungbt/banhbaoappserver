@@ -15,7 +15,10 @@ const facebookApi = 'https://graph.facebook.com/me?fields=email,birthday,link,fi
 // @access Public
 router.post('/', (req, res) => {
     console.log('Login body', req.body);
-    let { username, password } = req.body;
+    let {
+        username,
+        password
+    } = req.body;
     //Simple validation
     if (!username || !password) {
         return res.status(400).json({
@@ -115,8 +118,8 @@ router.post('/facebook', async(req, res, next) => {
                 console.log('user first login');
                 const newUser = new User({
                     username: '',
-                    firstname: datajson.firstname,
-                    lastname: datajson.lastname,
+                    firstname: datajson.first_name,
+                    lastname: datajson.last_name,
                     email: datajson.email,
                     gender: datajson.gender,
                     dob: datajson.birthday,

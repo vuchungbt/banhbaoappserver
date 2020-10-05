@@ -29,7 +29,7 @@ block content
                 span=user.trading
             p
                 | Time block: 
-                span=`${user.timeBlock.getDate()}/${user.timeBlock.getMonth()}/${user.timeBlock.getFullYear()}--${user.timeBlock.getHours()}:${user.timeBlock.getMinutes()}`
+                span=`${user.timeBlock.getMonth()}/${user.timeBlock.getDate()}/${user.timeBlock.getFullYear()},${user.timeBlock.getHours()}:${user.timeBlock.getMinutes()}`
             .btn
                 a#del.btn.btn-danger.mr-5(href='/admin/user/delete/' + user._id) Delete User
                 a.btn.btn-warning.ml-4.mr-5(href='/admin/user/block/'+user._id) Ban 1 hour

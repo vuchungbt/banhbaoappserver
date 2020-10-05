@@ -3,10 +3,15 @@ const User = require("../models/User");
 module.exports.valiEmailUser = async(req, res, next) => {
     let {
         username,
-        email
+        email,
+        password,
+        dob
     } = req.body;
+
     const nameRegex = /^[A-Za-z0-9]{3,22}$/;
     const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    const passRegex = /^[A-Za-z0-9/:@!#$^&_+*\(\)\[-`{-~]{6,24}/;
+
     if (!nameRegex.test(username)) {
         return res.status(400).json({
             status: 400,
@@ -41,5 +46,27 @@ module.exports.valiEmailUser = async(req, res, next) => {
             msg: 'Email already exists',
         });
     }
+    if (!passRegex.test(password)) {
+        return res.status(400).json({
+            status: 400,
+            msg: 'Password must contain no spaces and have a minimum length of 6, up to 24',
+        });
+    }
+    if (!checkDate(dob)) {
+        return res.status(400).json({
+            status: 400,
+            msg: 'Age must be 13+',
+        });
+    }
     next();
+}
+
+function checkDate(dob) {
+    let time = new Date();
+    let now = new Date(time.getFullYear(), time.getMonth(), time.getDate());
+    let dateArr = dob.split("/");
+    let dateOfBirth = new Date(dateArr[2], dateArr[0], dateArr[1]);
+    let check = (now - dateOfBirth) / (1000 * 60 * 60 * 24 * 365);
+    if (check >= 13) return true;
+    else return false;
 }

@@ -121,3 +121,7 @@ img {
     height: 500px;
     overflow-y: scroll;
 }
+
+.time {
+    font-size: 10px;
+}
