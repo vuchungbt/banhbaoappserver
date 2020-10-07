@@ -112,7 +112,7 @@
     <script src="style.js"></script>
     <script>
         const tk = localStorage.getItem('jwtToken');
-        var socket = io('http://localhost/', {
+        var socket = io('https://localhost/', {
             query: 'token=' + tk,
         });
 
@@ -133,7 +133,7 @@
                     roomId
                 }) {
                     $.ajax({
-                        url: `http://localhost/api/messages/rooms/${roomId}`,
+                        url: `https://localhost/api/messages/rooms/${roomId}`,
                         type: 'GET',
                         dataType: 'json',
                         headers: {
@@ -141,7 +141,7 @@
                         },
                         contentType: 'application/json; charset=utf-8',
                         success: function(result) {
-                            console.log(`http://localhost/api/messages/rooms/${roomId}`, result);
+                            console.log(`https://localhost/api/messages/rooms/${roomId}`, result);
                         },
                         error: function(error) {
                             console.log(error);

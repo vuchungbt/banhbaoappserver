@@ -4,13 +4,21 @@ const bcrypt = require('bcryptjs');
 
 const Admin = require('../../models/Admin');
 const middlewareAdmin = require('../../middleware/authAdmin');
-const auth = require('../../middleware/auth');
+const authAdmin = require("../../middleware/authAdmin");
+const config = require('config');
 
-router.post('/register', async(req, res) => {
+router.post('/register', authAdmin.validateUser, async(req, res) => {
     let {
         username,
-        password
+        password,
+        key
     } = req.body;
+    if (key != config.get("key")) {
+        return res.status(400).json({
+            status: 400,
+            msg: 'Key not found',
+        });
+    }
     username = username.toLowerCase();
     const admin = await Admin.findOne({
         username,

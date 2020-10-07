@@ -1,4 +1,7 @@
 const User = require("../models/User");
+const nameRegex = /^[A-Za-z0-9]{3,22}$/;
+const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+const passRegex = /^[A-Za-z0-9/:@!#$^&_+*\(\)\[-`{-~]{6,24}/;
 
 module.exports.valiEmailUser = async(req, res, next) => {
     let {
@@ -8,9 +11,6 @@ module.exports.valiEmailUser = async(req, res, next) => {
         dob
     } = req.body;
 
-    const nameRegex = /^[A-Za-z0-9]{3,22}$/;
-    const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-    const passRegex = /^[A-Za-z0-9/:@!#$^&_+*\(\)\[-`{-~]{6,24}/;
 
     if (!nameRegex.test(username)) {
         return res.status(400).json({
