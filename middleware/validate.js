@@ -15,13 +15,13 @@ module.exports.valiEmailUser = async(req, res, next) => {
     if (!nameRegex.test(username)) {
         return res.status(400).json({
             status: 400,
-            msg: 'Username is not in the correct format',
+            msg: 'Username is not in the correct format, minimum length of 3, up to 22 ',
         });
     }
     if (!emailRegexp.test(email)) {
         return res.status(400).json({
             status: 400,
-            msg: 'Email is not in the correct format',
+            msg: 'Email is not in the correct format, minimum length of 3, up to 22',
         });
     }
     username = username.toLowerCase();
