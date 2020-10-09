@@ -1,7 +1,7 @@
 extends ../template
 block content
     .form(style="text-align: center;")
-        h3 Search User by ID
+        h3 Search User by ID or Username
         form(action="/admin/user" method="POST")(style ="width : 500px; display: inline-block;")
             .form-group
                 input.form-control(type='text', placeholder='Search',name="id" aria-label='Search' required)

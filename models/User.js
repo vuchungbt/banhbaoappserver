@@ -51,6 +51,14 @@ const UserSchema = new Schema({
     timeBlock: {
         type: Date,
         default: new Date()
+    },
+    ISObox: {
+        type: String,
+        default: "VN"
+    },
+    language: {
+        type: String,
+        default: "US"
     }
 });
 

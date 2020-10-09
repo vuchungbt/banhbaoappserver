@@ -20,7 +20,7 @@ block content
                         td=feedback.title
                         td=feedback.feedback
                         td=feedback.user_id
-                        td=`${feedback.time.getDate()}/${feedback.time.getMonth()}/${feedback.time.getFullYear()}--${feedback.time.getHours()}:${feedback.time.getMinutes()}`
+                        td=`${feedback.time.getDate()}/${feedback.time.getMonth() + 1}/${feedback.time.getFullYear()}--${feedback.time.getHours()}:${feedback.time.getMinutes()}`
                         //- td
                         //-     a.btn.btn-info(href="/admin/link/update/" + link._id) ...
                         //- td

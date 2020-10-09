@@ -15,7 +15,7 @@ module.exports.validate = async(req, res, next) => {
     username = username.toLowerCase();
     const admin = await Admin.findOne({
         username,
-    });
+    }, );
     if (!admin) {
         res.render('auth/login.pug');
     }

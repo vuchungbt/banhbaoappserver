@@ -17,7 +17,7 @@ block content
                             a(href="/admin/room/getmessages/"+room._id)=room._id
                         td=room.members[0]
                         td=room.members[1]
-                        td=`${room.create_at.getDate()}/${room.create_at.getMonth()}/${room.create_at.getFullYear()}--${room.create_at.getHours()}:${room.create_at.getMinutes()}`
+                        td=`${room.create_at.getMonth()+1}/${room.create_at.getDate()}/${room.create_at.getFullYear()},${room.create_at.getHours()}:${room.create_at.getMinutes()}`
 
        
         nav(aria-label='Page navigation example')

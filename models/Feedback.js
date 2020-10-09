@@ -19,7 +19,6 @@ const FeedbackSchema = new Schema({
         type: Date,
         required: true
     }
-  });
-  
-  module.exports = Feedback = mongoose.model("feedback", FeedbackSchema);
-  
+});
+
+module.exports = Feedback = mongoose.model("feedback", FeedbackSchema);

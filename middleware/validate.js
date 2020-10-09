@@ -1,16 +1,10 @@
-const User = require("../models/User");
+const User = require('../models/User');
 const nameRegex = /^[A-Za-z0-9]{3,22}$/;
 const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 const passRegex = /^[A-Za-z0-9/:@!#$^&_+*\(\)\[-`{-~]{6,24}/;
 
 module.exports.valiEmailUser = async(req, res, next) => {
-    let {
-        username,
-        email,
-        password,
-        dob
-    } = req.body;
-
+    let { username, email, password, dob } = req.body;
 
     if (!nameRegex.test(username)) {
         return res.status(400).json({
@@ -28,11 +22,13 @@ module.exports.valiEmailUser = async(req, res, next) => {
 
     const user = await User.find({
         $or: [{
-            username
-        }, {
-            email
-        }]
-    })
+                username,
+            },
+            {
+                email,
+            },
+        ],
+    });
 
     if (user.length != 0 && user[0].username == username) {
         return res.status(400).json({
@@ -59,12 +55,12 @@ module.exports.valiEmailUser = async(req, res, next) => {
         });
     }
     next();
-}
+};
 
 function checkDate(dob) {
     let time = new Date();
     let now = new Date(time.getFullYear(), time.getMonth(), time.getDate());
-    let dateArr = dob.split("/");
+    let dateArr = dob.split('/');
     let dateOfBirth = new Date(dateArr[2], dateArr[0], dateArr[1]);
     let check = (now - dateOfBirth) / (1000 * 60 * 60 * 24 * 365);
     if (check >= 13) return true;
