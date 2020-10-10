@@ -110,16 +110,38 @@ router.get('/', authMiddleware, (req, res) => {
         });
 });
 
+function checkDate(dob) {
+    let time = new Date();
+    let now = new Date(time.getFullYear(), time.getMonth(), time.getDate());
+    let dateArr = dob.split('/');
+    let dateOfBirth = new Date(dateArr[2], dateArr[0], dateArr[1]);
+    let check = (now - dateOfBirth) / (1000 * 60 * 60 * 24 * 365);
+    if (check >= 13) return true;
+    else return false;
+}
 // @route POST api/user/update
 // @desc Create An User
 // @access Public
+
+const emailRegexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 router.post('/update', authMiddleware, (req, res) => {
     var condition = {
         _id: req.user.id,
     };
-
+    let { email, dob } = req.body;
     console.log('update request body', req.body);
-
+    if (!emailRegexp.test(email)) {
+        return res.status(400).json({
+            status: 400,
+            msg: 'Email is not in the correct format, minimum length of 3, up to 22',
+        });
+    }
+    if (!checkDate(dob)) {
+        return res.status(400).json({
+            status: 400,
+            msg: 'Age must be 13+',
+        });
+    }
     updateUser(condition, req.body)
         .then((updatedUser) =>
             res.json({
@@ -310,6 +332,12 @@ router.post('/resetpassword', async(req, res) => {
     const user = await User.findOne({
         email,
     });
+    if(!user){
+        res.status(404).json({
+            status: 404,
+            msg: 'email not found',
+        });
+    }
     _id = user._id;
     const mailUser = email;
     const code = generate();
