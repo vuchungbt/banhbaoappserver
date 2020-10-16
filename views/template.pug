@@ -27,7 +27,7 @@ body
     #sidebar-wrapper.bg-light.border-right
       .sidebar-heading(style="color :red") Strangerfunny
       .list-group.list-group-flush
-        a.list-group-item.list-group-item-action.bg-light(href='#') Home
+        a.list-group-item.list-group-item-action.bg-light(href='/admin') Home
         a.list-group-item.list-group-item-action.bg-light(href='/admin/user') User
          a.list-group-item.list-group-item-action.bg-light(href='/admin/room/1') Room
         a.list-group-item.list-group-item-action.bg-light(href='/admin/feedback') Feedback
@@ -47,21 +47,39 @@ body
                 button.btn.btn-secondary(type='button') Logout
                
                 span.sr-only (current)
-            li.nav-item.active
-              a.nav-link(href='/')
-                | Home 
-                span.sr-only (current)
-          
-            li.nav-item.dropdown
-              a#navbarDropdown.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                | Tools
-              .dropdown-menu.dropdown-menu-right(aria-labelledby='navbarDropdown')
-                a.dropdown-item(href='#') 1
-                a.dropdown-item(href='#') 2
-                .dropdown-divider
-                a.dropdown-item(href='#') Something else here
       block content
-        
+        link(rel='stylesheet', href='/css/intro.css')
+        .head
+          img.imge(src='/img/200_logo.png')
+          .right
+            .text-head strangerfunny.com
+            .text-head Chat with strangers
+        .container
+          .row
+            .col.cl1
+              div Download for Android
+              div
+                a(href='') Google Play
+            .col.cl2
+              div Connect with us on facebook confession
+              div
+                img(src='', alt='')
+                a(href='') link facebook
+            .w-100
+            .col.cl3
+              div Download for IOS
+              div
+                a(href='') Apple Store
+            .col.cl4
+              div Find stranger with commuity
+              div
+                img(src='', alt='')
+                a(href='') Link groups
+        footer.page-footer.font-small.blue
+          .footer-copyright.text-center.py-3
+            strong.text Keydateam @ coppy right 2020
+            p
+              strong.text  product.strangerfunny@gmail.com
 
   // /#page-content-wrapper
 // /#wrapper
