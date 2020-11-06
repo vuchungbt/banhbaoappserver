@@ -332,7 +332,7 @@ router.post('/resetpassword', async(req, res) => {
     const user = await User.findOne({
         email,
     });
-    if(!user){
+    if (!user) {
         res.status(404).json({
             status: 404,
             msg: 'email not found',

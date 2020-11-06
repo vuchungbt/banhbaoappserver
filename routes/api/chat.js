@@ -33,21 +33,21 @@ const connect = io => {
         console.log("connection");
 
         const token = socket.handshake.query.token;
+        console.log(token);
         if (!token || token == "null" || token == "" || token == null || token == undefined) {
+            console.log("token k dung");
             console.log("token invalid:", token);
-            // socket.emit('error', {
-            //     data: token,
-            //     msg: 'token invalid',
-            //     type: 'token'
-            // });
         } else {
             const {
                 username,
                 id
             } = decodedToken(token);
+            console.log(username, id);
             socket.username = username;
             socket.userId = id;
             socket.on("find-partner", async(data) => {
+                console.log(data);
+                console.log("find");
                 let user = await User.findById({
                     _id: socket.userId
                 });

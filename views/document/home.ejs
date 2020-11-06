@@ -9,10 +9,10 @@
     <script src="jquery351.js"></script>
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" />
 
     <style type="text/css">
         .text-hidden {
@@ -115,7 +115,6 @@
         var socket = io('https://localhost/', {
             query: 'token=' + tk,
         });
-
         socket.on('all-message', function(data) {
             var msg = document.getElementById('areMsg').value;
             msg = msg + '\n' + data;
@@ -126,9 +125,9 @@
             let currentRoomId = '';
             $('#findpartner').click(function() {
                 console.log('find-click');
-
+                console.log('sap tim');
                 socket.emit('find-partner', 'alalo');
-
+                console.log('dang tim');
                 socket.on('joined-to-room', function({
                     roomId
                 }) {

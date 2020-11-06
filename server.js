@@ -22,7 +22,7 @@ const room = require("./routes/admin/room");
 const app = express();
 // app.use(cookieParser());
 app.use(express.static('public'));
-app.use(express.static(path.join(__dirname, 'js')));
+// app.use(express.static(path.join(__dirname, 'js')));
 app.set('view engine', 'ejs');
 app.set('view engine', 'pug');
 app.set('views', './views');
@@ -36,19 +36,10 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use(cookieParser(config.get('jwtSecret')));
-// const server = require('http').Server(app);
-// const server = require("https").createServer({
-//     key: fs.readFileSync('./ssl/private.key'),
-//     cert: fs.readFileSync('./ssl/certificate.crt'),
-//     ca: [fs.readFileSync('./ssl/ca_bundle.crt')],
-// }, app);
 
 const io = require('socket.io')(server);
 const iohttps = require('socket.io')(https);
 server.listen(80, () => console.log('Started on port 80...'));
-
-// connect(io);
-// connect(iohttps);
 
 const port = process.env.PORT || 443;
 https
@@ -67,8 +58,10 @@ connect(io);
 app.get('/admin', authloged.logged, (req, res) => {
     res.render('template.pug');
 });
+
 app.get('/', function(req, res) {
-    res.render('document/home.ejs');
+    // res.render('document/home.ejs');
+    res.render("landing.pug");
 });
 app.get('/document/v1.0.0/release', function(req, res) {
     res.render('document/document.ejs');
@@ -76,7 +69,9 @@ app.get('/document/v1.0.0/release', function(req, res) {
 app.get('/document/admin/v1.0.0/release', function(req, res) {
     res.render('document/document-admin.ejs');
 });
-
+app.get('/pravicy', function(req, res) {
+    res.render('document/pravicy.ejs');
+});
 app.use(express.json());
 app.use(cors());
 

@@ -34,7 +34,8 @@ router.post("/", auth.logged, async(req, res) => {
         if (user != null) {
             res.render("user/profile", {
                 user: user
-            })
+            });
+            return;
         }
         res.render("user/user.pug", {
             mess: "ID user or username not found"
