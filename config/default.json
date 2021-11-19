@@ -1,6 +1,6 @@
 {
-    "mongoURI": "mongodb://localhost:27017/banhbaoapp",
-    "jwtSecret": "express session secret banhbaoapp",
+    "mongoURI": "mongodb://localhost:27017/chatdating",
+    "jwtSecret": "chatdating secret chatdating",
     "gmail": "noreply.strangerfunny@gmail.com",
     "pass": "kaydateamqQ!@#",
     "text": "Code reset password: ",

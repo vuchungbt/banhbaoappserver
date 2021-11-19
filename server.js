@@ -38,21 +38,10 @@ app.use(bodyParser.json());
 app.use(cookieParser(config.get('jwtSecret')));
 
 const io = require('socket.io')(server);
-const iohttps = require('socket.io')(https);
-server.listen(80, () => console.log('Started on port 80...'));
+
+server.listen(3002, () => console.log('Started on port 80...'));
 
 const port = process.env.PORT || 443;
-https
-    .createServer({
-            key: fs.readFileSync('./ssl/private.key'),
-            cert: fs.readFileSync('./ssl/certificate.crt'),
-            ca: [fs.readFileSync('./ssl/ca_bundle.crt')],
-            //passphrase: 'abcd'
-        },
-        app,
-    )
-    .listen(port);
-
 console.log('app is running on port ', port);
 connect(io);
 app.get('/admin', authloged.logged, (req, res) => {
