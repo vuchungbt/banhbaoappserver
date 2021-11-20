@@ -38,11 +38,11 @@ app.use(bodyParser.json());
 app.use(cookieParser(config.get('jwtSecret')));
 
 const io = require('socket.io')(server);
+const port = process.env.PORT || 3002;
+server.listen(port, () => console.log(`Started on port ${port}...`));
 
-server.listen(3002, () => console.log('Started on port 80...'));
-
-const port = process.env.PORT || 443;
-console.log('app is running on port ', port);
+//const port = process.env.PORT || 443;
+//console.log('app is running on port ', port);
 connect(io);
 app.get('/admin', authloged.logged, (req, res) => {
     res.render('template.pug');
