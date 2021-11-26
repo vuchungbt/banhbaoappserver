@@ -2,18 +2,18 @@ const express = require("express");
 const router = express.Router();
 const Link = require("../../models/Link");
 const auth = require("../../middleware/authAdmin")
-router.get("/", auth.logged, auth.logged, async(req, res) => {
+router.get("/", async(req, res) => {
     const links = await Link.find();
     res.render("link/link.pug", {
         links
     })
 })
 
-router.get("/create", auth.logged, async(req, res) => {
+router.get("/create",  async(req, res) => {
     res.render("link/create.pug");
 })
 
-router.post("/create", auth.logged, async(req, res) => {
+router.post("/create",  async(req, res) => {
     const {
         name,
         link,
@@ -41,7 +41,7 @@ router.post("/create", auth.logged, async(req, res) => {
     }
 })
 
-router.get("/delete/:_id", auth.logged, async(req, res) => {
+router.get("/delete/:_id", async(req, res) => {
     const _id = req.params._id;
     try {
         await Link.findByIdAndRemove({
