@@ -13,17 +13,17 @@ router.post('/register', authAdmin.validateUser, async(req, res) => {
         password,
         key
     } = req.body;
-    if (key != config.get("key")) {
-        return res.status(400).json({
-            status: 400,
-            msg: 'Key not found',
-        });
-    }
+    // if (key != config.get("key")) {
+    //     return res.status(400).json({
+    //         status: 400,
+    //         msg: 'Key not found',
+    //     });
+    // }
     // username = username.toLowerCase();
     // const admin = await Admin.findOne({
     //     username
     // });
-    // console.log(admin);
+     console.log('admin',username);
     // if (admin) {
     //     return res.status(400).json({
     //         status: 400,
