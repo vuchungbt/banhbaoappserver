@@ -3,6 +3,11 @@ const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const fs = require("fs");
 
+var FCM = require('fcm-node');
+var serverKey = config.get('ServerKey');
+var serviceAccount = require("../../config/servicesAccountKey.json");
+var fcm = new FCM(serverKey);
+
 const RoomDetails = require("../../models/Database");
 const MessageModel = require("../../models/Message");
 const User = require("../../models/User");
@@ -33,14 +38,15 @@ const connect = io => {
         console.log("connection");
 
         const token = socket.handshake.query.token;
+        
         console.log(token);
         if (!token || token == "null" || token == "" || token == null || token == undefined) {
-            console.log("token k dung");
             console.log("token invalid:", token);
         } else {
             const {
                 username,
-                id
+                id,
+                tokenDevice
             } = decodedToken(token);
             console.log(username, id);
             socket.username = username;
@@ -58,6 +64,7 @@ const connect = io => {
                     return;
                 }
                 console.log('find partner starting...');
+                
 
                 const r = await RoomDetails.findRoomActive(socket.userId);
                 console.log('findRoom :', r);
@@ -78,10 +85,11 @@ const connect = io => {
                 } else {
                     // lấy ngẫu nhiên trong hàng đợi 1 user để tạo room
                     const userToCreateRoom = _.sample(clients);
-
+                    let tokenDevice = { "tokenDevice1" : '' ,"tokenDevice2" :'' }
                     if (!userToCreateRoom || userToCreateRoom.userId === socket.userId) // ko co ai
                     {
                         console.log('no body - push mysefl');
+                        tokenDevice.tokenDevice1 = tokenDevice;
                         let client = {
                             socket: socket,
                             username: socket.username,
@@ -93,7 +101,7 @@ const connect = io => {
                             console.log('have one -> create room');
                             // tạo phòng 
                             _.remove(clients, client => client.userId === userToCreateRoom.userId);
-
+                            tokenDevice.tokenDevice2 = tokenDevice;
                             // findOrCreateRoomObject by memberIds
                             const roomId = await RoomDetails.findRoomOrCreateOneWithMembers([userToCreateRoom.userId, socket.userId]);
 
@@ -112,6 +120,7 @@ const connect = io => {
                             const user = await User.findOne({
                                 _id: userToCreateRoom.userId
                             });
+
                             user.trading = user.trading + 1;
                             user.save();
                             console.log('trading1>>', user.trading);
@@ -122,6 +131,7 @@ const connect = io => {
                             user2.trading = user2.trading + 1;
                             user2.save();
                             console.log('trading2>>', user2.trading);
+
                             console.log('joined-to-room successfully');
                             const messageCreatedResult = await MessageModel.sendMessageToRoom(userToCreateRoom.userId, socket.userId, 'system', 'The conversation begins.\nSay \'bye\' to end conversation', room.roomId);
                             io.to(room.roomId).emit('new-message', messageCreatedResult);
@@ -135,6 +145,8 @@ const connect = io => {
                         }
 
                     }
+                    socket.tokenDevice = tokenDevice;
+                    console.log('socket.tokenDevice',socket.tokenDevice);
                 }
 
             });
@@ -149,6 +161,7 @@ const connect = io => {
                     })
                     console.log(user);
                     let report = user.report;
+
                     for (let word of words) {
                         if (message.content.includes(word)) {
                             report++;
@@ -158,8 +171,47 @@ const connect = io => {
 
                     handleBlock(report, socket.id, socket.userId, r._id);
                     const messageCreatedResult = await MessageModel.sendMessageToRoom(trading, socket.userId, 'message', message.content, r._id);
-                    io.to(messageCreatedResult.room_id).emit('new-message', messageCreatedResult);
 
+                
+                    //---------------------------------notify message-----------------------------------------
+                    var message1 = { 
+                        to: socket.tokenDevice1, 
+                        
+                        notification: {
+                            title: 'New message from Chat.Dating', 
+                            body: 'One people sent you a message' 
+                        },
+                        
+                        data: message.content
+                    };
+                    var message2 = { 
+                        to: socket.tokenDevice2, 
+                        
+                        notification: {
+                            title: 'New message from Chat.Dating', 
+                            body: 'One people sent you a message' 
+                        },
+                        
+                        data: message.content
+                    };
+                    
+                    fcm.send(message1, function(err, response){
+                        if (err) {
+                            console.log("Something has gone wrong!");
+                        } else {
+                            console.log("Successfully sent with response: ", response);
+                        }
+                    });
+                    fcm.send(message2, function(err, response){
+                        if (err) {
+                            console.log("Something has gone wrong!");
+                        } else {
+                            console.log("Successfully sent with response: ", response);
+                        }
+                    });
+                    //----------------------------------------------------------------------------------------
+                    io.to(messageCreatedResult.room_id).emit('new-message', messageCreatedResult);
+                    
                     console.log('messageCreatedResult > ', messageCreatedResult);
                 } else {
                     socket.emit('error', {
