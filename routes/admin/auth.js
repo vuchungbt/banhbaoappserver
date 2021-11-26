@@ -7,7 +7,7 @@ const middlewareAdmin = require('../../middleware/authAdmin');
 const authAdmin = require("../../middleware/authAdmin");
 const config = require('config');
 
-router.post('/register', authAdmin.validateUser, async(req, res) => {
+router.post('/register', async(req, res) => {
     console.log('bodyyy',req.body);
     let { username, password } = req.body;
     // if (key != config.get("key")) {
