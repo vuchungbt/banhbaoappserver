@@ -17,8 +17,7 @@ router.post('/', (req, res) => {
     console.log('Login body', req.body);
     let {
         username,
-        password,
-        tokendevice
+        password
     } = req.body;
     //Simple validation
     if (!username || !password) {
@@ -41,7 +40,6 @@ router.post('/', (req, res) => {
                 msg: 'User does not exists',
             });
         } else {
-            user.tokendevice = tokendevice;
             validatePass(res, password, user);
         }
     });
