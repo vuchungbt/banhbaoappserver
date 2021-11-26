@@ -14,9 +14,10 @@ router.post('/register', authAdmin.validateUser, async(req, res) => {
         key
     } = req.body;
     if (key != config.get("key")) {
+        console.log('get key failed');
         return res.status(400).json({
             status: 400,
-            msg: 'Key not found',
+            msg: 'get key failed',
         });
     }
     username = username.toLowerCase();
