@@ -18,7 +18,7 @@ router.post('/', (req, res) => {
     let {
         username,
         password,
-        tokenDevice
+        tokendevice
     } = req.body;
     //Simple validation
     if (!username || !password) {
@@ -41,7 +41,7 @@ router.post('/', (req, res) => {
                 msg: 'User does not exists',
             });
         } else {
-            user.tokenDevice = tokenDevice;
+            user.tokendevice = tokendevice;
             validatePass(res, password, user);
         }
     });
@@ -58,7 +58,7 @@ function validatePass(res, password, user) {
         jwt.sign({
                 id: user.id,
                 username: user.username,
-                tokenDevice : user.tokenDevice
+                tokendevice : user.tokendevice
             },
             config.get('jwtSecret'), {
                 expiresIn: 8640000,

@@ -46,7 +46,7 @@ const connect = io => {
             const {
                 username,
                 id,
-                tokenDevice
+                tokendevice
             } = decodedToken(token);
             console.log(username, id);
             socket.username = username;
@@ -85,11 +85,11 @@ const connect = io => {
                 } else {
                     // lấy ngẫu nhiên trong hàng đợi 1 user để tạo room
                     const userToCreateRoom = _.sample(clients);
-                    let tokenDevice = { "tokenDevice1" : '' ,"tokenDevice2" :'' }
+                    let tokendevice = { "tokendevice1" : '' ,"tokendevice2" :'' }
                     if (!userToCreateRoom || userToCreateRoom.userId === socket.userId) // ko co ai
                     {
                         console.log('no body - push mysefl');
-                        tokenDevice.tokenDevice1 = tokenDevice;
+                        tokendevice.tokendevice1 = tokendevice;
                         let client = {
                             socket: socket,
                             username: socket.username,
@@ -101,7 +101,7 @@ const connect = io => {
                             console.log('have one -> create room');
                             // tạo phòng 
                             _.remove(clients, client => client.userId === userToCreateRoom.userId);
-                            tokenDevice.tokenDevice2 = tokenDevice;
+                            tokendevice.tokendevice2 = tokendevice;
                             // findOrCreateRoomObject by memberIds
                             const roomId = await RoomDetails.findRoomOrCreateOneWithMembers([userToCreateRoom.userId, socket.userId]);
 
@@ -145,8 +145,8 @@ const connect = io => {
                         }
 
                     }
-                    socket.tokenDevice = tokenDevice;
-                    console.log('socket.tokenDevice',socket.tokenDevice);
+                    socket.tokendevice = tokendevice;
+                    console.log('socket.tokenDevice',socket.tokendevice);
                 }
 
             });
