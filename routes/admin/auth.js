@@ -8,10 +8,8 @@ const authAdmin = require("../../middleware/authAdmin");
 const config = require('config');
 
 router.post('/register', authAdmin.validateUser, async(req, res) => {
-    let {
-        username,
-        password
-    } = req.body;
+    console.log('bodyyy',req.body);
+    let { username, password } = req.body;
     // if (key != config.get("key")) {
     //     return res.status(400).json({
     //         status: 400,
@@ -22,7 +20,7 @@ router.post('/register', authAdmin.validateUser, async(req, res) => {
     // const admin = await Admin.findOne({
     //     username
     // });
-     console.log('admin',username);
+    console.log('admin',username);
     // if (admin) {
     //     return res.status(400).json({
     //         status: 400,
