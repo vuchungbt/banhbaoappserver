@@ -31,6 +31,7 @@ var data = fs.readFileSync("xref.txt", {
 });
 var words = data.replace(/(\r\n|\n|\r)/gm, "|").split("|");
 const connect = io => {
+    
     io.on("connection", function(socket) {
         // number++;
         // socket.emit("userActive", number);

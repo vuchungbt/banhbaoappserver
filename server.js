@@ -38,6 +38,7 @@ app.use(bodyParser.json());
 app.use(cookieParser(config.get('jwtSecret')));
 
 const io = require('socket.io')(server);
+io.set('transports', ['websocket']);
 const port = process.env.PORT || 3002;
 server.listen(port, () => console.log(`Started on port ${port}...`));
 
