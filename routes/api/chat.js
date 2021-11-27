@@ -207,7 +207,7 @@ const connect = io => {
                     const messageFi = {
                         notification: {
                             title:"Message from people",
-                            body:"Message hint"
+                            body:message.content
                         },
                         data: {
                             score: '850', time: '2:45',
