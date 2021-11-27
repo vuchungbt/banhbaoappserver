@@ -3,10 +3,14 @@ const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const fs = require("fs");
 
-var FCM = require('fcm-node');
 var serverKey = config.get('ServerKey');
 var serviceAccount = require("../../config/servicesAccountKey.json");
-var fcm = new FCM(serverKey);
+var admin = require("firebase-admin");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
 
 const RoomDetails = require("../../models/Database");
 const MessageModel = require("../../models/Message");

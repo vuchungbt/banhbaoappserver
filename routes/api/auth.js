@@ -76,6 +76,7 @@ function validatePass(res, password, user,token_device) {
                     _id: user._id,
                     username: user.username,
                 };
+                console.log('responseUser',responseUser);
                 res.status(200).json({
                     status: 200,
                     user: responseUser,
