@@ -176,17 +176,17 @@ const connect = io => {
                     const user = await User.findById({
                         _id: socket.userId
                     })
-                    //console.log(user);
-                    //let report = user.report;
+                    console.log(user);
+                    let report = user.report;
 
-                    // for (let word of words) {
-                    //     if (message.content.includes(word)) {
-                    //         report++;
-                    //         break;
-                    //     }
-                    // }
+                    for (let word of words) {
+                        if (message.content.includes(word)) {
+                            report++;
+                            break;
+                        }
+                    }
 
-                   // handleBlock(report, socket.id, socket.userId, r._id);
+                   handleBlock(report, socket.id, socket.userId, r._id);
                     const messageCreatedResult = await MessageModel.sendMessageToRoom(trading, socket.userId, 'message', message.content, r._id);
 
                     
@@ -198,7 +198,7 @@ const connect = io => {
                     //console.log('============socket.token_device > ', socket.token_device);
                     //console.log('============socket.token_device Me> ', token_device);
 
-                    const message = {
+                    const messageFi = {
                         notification: {
                             title:"Message from people",
                             body:"Message hint"
@@ -208,7 +208,7 @@ const connect = io => {
                         },
                         token: r.token_devices
                       };
-                      admin.messaging().send(message).then((resp)=> {
+                      admin.messaging().send(messageFi).then((resp)=> {
                           console.log("Send THEN ",resp) ;
                       })
                       .catch((er)=>{
