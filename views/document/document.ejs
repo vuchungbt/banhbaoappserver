@@ -573,6 +573,54 @@
                     </tr>
                     </tbody>
             </table>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <div class="alert alert-success" role="alert">#Logout</div>
+                        </th>
+                        <td>Post</td>
+                        <td><code>/api/auth/logout</pre></td>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<th scope="row">Header</th>
+							<td>application/json; charset=utf-8</td>
+							<td></td>
+						</tr>
+						<tr>
+							<th scope="row">Body</th>
+							<td>required</td>
+							<td>
+								<code>
+									{
+										<br/> 
+											"token" : "xxxx.xxxx.xxxx" <br />
+									} <br />
+									</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Result</th>
+                        <td>Successfully</td>
+                        <td><code>{ <br/>
+								"status": 200,<br/>
+							
+							}</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Result</th>
+                        <td>Failed</td>
+                        <td><code>{ <br/>
+								&nbsp;&nbsp;&nbsp;&nbsp;"status" : 401,<br/>
+								&nbsp;&nbsp;&nbsp;&nbsp;"msg" : "Token is invalid" <br/>
+							}
+							</code></td>
+                    </tr>
+                    </tbody>
+            </table>
             <!--get link group or cfs-->
             <table class="table table-bordered">
                 <thead>
