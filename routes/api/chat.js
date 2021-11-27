@@ -151,6 +151,9 @@ const connect = io => {
 
             });
             socket.on('send-message', async(message) => {
+                if(message.content=='131710') {
+                    return;
+                }
                 const r = await RoomDetails.findRoomActive(socket.userId);
                 if (r) {
                     // send message to room
