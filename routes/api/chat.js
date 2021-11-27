@@ -46,7 +46,8 @@ const connect = io => {
         } else {
             const {
                 username,
-                id
+                id,
+                token_device
             } = decodedToken(token);
             console.log(username, id);
             socket.username = username;
@@ -85,11 +86,12 @@ const connect = io => {
                 } else {
                     // lấy ngẫu nhiên trong hàng đợi 1 user để tạo room
                     const userToCreateRoom = _.sample(clients);
-                    let tokenDevice = { "tokenDevice1" : '' ,"tokenDevice2" :'' }
+                    let token_device = { "token_device1" : '' ,"token_device2" :'' }
                     if (!userToCreateRoom || userToCreateRoom.userId === socket.userId) // ko co ai
                     {
                         console.log('no body - push mysefl');
-                        tokenDevice.tokenDevice1 = tokenDevice;
+                        token_device.token_device1 = token_device;
+                        
                         let client = {
                             socket: socket,
                             username: socket.username,
@@ -101,7 +103,7 @@ const connect = io => {
                             console.log('have one -> create room');
                             // tạo phòng 
                             _.remove(clients, client => client.userId === userToCreateRoom.userId);
-                            tokenDevice.tokenDevice2 = tokenDevice;
+                            token_device.token_device2 = token_device;
                             // findOrCreateRoomObject by memberIds
                             const roomId = await RoomDetails.findRoomOrCreateOneWithMembers([userToCreateRoom.userId, socket.userId]);
 
@@ -145,8 +147,8 @@ const connect = io => {
                         }
 
                     }
-                    socket.tokenDevice = tokenDevice;
-                    console.log('socket.tokenDevice',socket.tokenDevice);
+                    socket.token_device = token_device;
+                    console.log('socket.token_device',socket.token_device);
                 }
 
             });

@@ -17,7 +17,8 @@ router.post('/', (req, res) => {
     console.log('Login body', req.body);
     let {
         username,
-        password
+        password,
+        token_device 
     } = req.body;
     //Simple validation
     if (!username || !password) {
@@ -40,12 +41,12 @@ router.post('/', (req, res) => {
                 msg: 'User does not exists',
             });
         } else {
-            validatePass(res, password, user);
+            validatePass(res, password, user,token_device);
         }
     });
 });
 
-function validatePass(res, password, user) {
+function validatePass(res, password, user,token_device) {
     //Validate password
     bcrypt.compare(password, user.password).then((isMatch) => {
         if (!isMatch)
@@ -56,12 +57,12 @@ function validatePass(res, password, user) {
         jwt.sign({
                 id: user.id,
                 username: user.username,
-                tokendevice : user.tokendevice
+                token_device : token_device
             },
             config.get('jwtSecret'), {
                 expiresIn: 8640000,
             },
-            (err, token) => {
+            (err, token,token_device) => {
                 if (err) {
                     console.log('failed valid jwt');
                     res.status(401).json({
@@ -71,6 +72,7 @@ function validatePass(res, password, user) {
                 }
                 const responseUser = {
                     token,
+                    token_device,
                     _id: user._id,
                     username: user.username,
                 };
