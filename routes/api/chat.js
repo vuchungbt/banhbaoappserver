@@ -198,27 +198,26 @@ const connect = io => {
                     //console.log('============socket.token_device > ', socket.token_device);
                     //console.log('============socket.token_device Me> ', token_device);
                     console.log('r.token_devices',r.token_devices);
+                    let  listtoken =[];
+                    r.token_devices.array.forEach(dv => {
+                        if(dv!==null && dv!=='' && dv!==undefined) {
+                            listtoken.push(dv);
+                        }
+                    });
                     const messageFi = {
                         notification: {
                             title:"Message from people",
                             body:"Message hint"
                         },
                         data: {
-                           message:message.content
+                            score: '850', time: '2:45',
+                            message:message.content
                         },
-                        tokens: r.token_devices
+                        tokens: listtoken
                     };
-                    await admin.messaging().sendMulticast(messageFi).then((resp)=> {
+
+                      await admin.messaging().send(messageFi).then((resp)=> {
                           console.log("Send THEN ",resp) ;
-                          if (resp.failureCount > 0) {
-                            const failedTokens = [];
-                            resp.responses.forEach((resp, idx) => {
-                              if (!resp.success) {
-                                failedTokens.push(registrationTokens[idx]);
-                              }
-                            });
-                            console.log('List of tokens that caused failures: ' + failedTokens);
-                          }
                       })
                       .catch((er)=>{
                         console.log("Send error ",er) ;
