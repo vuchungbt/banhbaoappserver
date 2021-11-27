@@ -92,6 +92,12 @@ const connect = io => {
                     socket.join(room.roomId);
                     io.to(room.roomId).emit('joined-to-room', room);
                     console.log('reconect success when find-partner', room);
+                    
+                    console.log('reconect success when find-partner', r.token_devices);
+                    r.token_devices.push(socket.token_device);
+                    r.save();
+                    console.log('RRRRRRRRRRR', r);
+                    
 
                 } else {
                     // lấy ngẫu nhiên trong hàng đợi 1 user để tạo room

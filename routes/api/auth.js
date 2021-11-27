@@ -210,6 +210,7 @@ router.post('/facebook', async(req, res, next) => {
 const decodedToken = token => jwt.verify(token, config.get("jwtSecret"));
 
 router.post('/logout',  async(req, res) => {
+    //const token = req.header("auth-token");
     let {
         token 
     } = req.body;
