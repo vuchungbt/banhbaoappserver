@@ -206,10 +206,19 @@ const connect = io => {
                         data: {
                            message:message.content
                         },
-                        token: r.token_devices
+                        tokens: r.token_devices
                     };
-                    await admin.messaging().send(messageFi).then((resp)=> {
+                    await admin.messaging().sendMulticast(messageFi).then((resp)=> {
                           console.log("Send THEN ",resp) ;
+                          if (resp.failureCount > 0) {
+                            const failedTokens = [];
+                            resp.responses.forEach((resp, idx) => {
+                              if (!resp.success) {
+                                failedTokens.push(registrationTokens[idx]);
+                              }
+                            });
+                            console.log('List of tokens that caused failures: ' + failedTokens);
+                          }
                       })
                       .catch((er)=>{
                         console.log("Send error ",er) ;
