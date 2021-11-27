@@ -8,6 +8,8 @@ const axios = require('axios');
 //Model
 const User = require('../../models/User');
 
+const Room = require('../../models/Database');
+
 const facebookApi = 'https://graph.facebook.com/me?fields=email,birthday,link,first_name,id,last_name,gender,picture&access_token=';
 
 // @route POST api/auth
@@ -45,6 +47,9 @@ router.post('/', (req, res) => {
         }
     });
 });
+
+
+
 
 function validatePass(res, password, user,token_device) {
     //Validate password
@@ -199,5 +204,28 @@ router.post('/facebook', async(req, res, next) => {
         });
     }
 });
+
+
+
+
+
+router.post('/logout',  async(req, res) => {
+    let {
+        token 
+    } = req.body;
+    
+    const decodedToken = token => jwt.verify(token, config.get("jwtSecret"));
+    const { username, id,  token_device } = decodedToken(token);
+    const room = await Room.findRoomAndRemoveToken(token_device);
+    console.log('logout******>>',room);
+    res.json({
+        status: 200,
+        msg: 'Done',
+    });
+
+ })
+
+
+
 
 module.exports = router;
