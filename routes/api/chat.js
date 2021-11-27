@@ -92,13 +92,12 @@ const connect = io => {
                 } else {
                     // lấy ngẫu nhiên trong hàng đợi 1 user để tạo room
                     const userToCreateRoom = _.sample(clients);
-                    let token_device = { "token_device1" : '' ,"token_device2" :'' }
-                    console.log('-------------------token_device 1---------------',token_device);
+                    let token_deviceAll = { "token_device1" : '' ,"token_device2" :'' }
                     if (!userToCreateRoom || userToCreateRoom.userId === socket.userId) // ko co ai
                     {
                         console.log('no body - push mysefl');
-                        token_device.token_device1 = token_device;
-                        console.log('1================Chat:',token_device);
+                        token_deviceAll.token_device1 = token_device;
+                        console.log('1================Chat:',token_deviceAll);
                         let client = {
                             socket: socket,
                             username: socket.username,
@@ -110,8 +109,7 @@ const connect = io => {
                             console.log('have one -> create room');
                             // tạo phòng 
                             _.remove(clients, client => client.userId === userToCreateRoom.userId);
-                            token_device.token_device2 = token_device;
-                            console.log('-------------------token_device 2---------------',token_device);
+                            token_deviceAll.token_device2 = token_device;
                             console.log('2================Chat:',token_device);
                             // findOrCreateRoomObject by memberIds
                             const roomId = await RoomDetails.findRoomOrCreateOneWithMembers([userToCreateRoom.userId, socket.userId]);
@@ -156,8 +154,8 @@ const connect = io => {
                         }
 
                     }
-                    socket.token_device = token_device;
-                    console.log('12=============token_device===Chat:',token_device);
+                    socket.token_device = token_deviceAll;
+                    console.log('12=============token_device===Chat:',token_deviceAll);
                     console.log('22=============socket.token_device:',socket.token_device);
                 }
 
