@@ -26,7 +26,8 @@ router.post('/', validate.valiEmailUser, (req, res) => {
         lastname,
         email,
         dob,
-        gender
+        gender,
+        token_device
     } = req.body;
 
 
@@ -40,11 +41,11 @@ router.post('/', validate.valiEmailUser, (req, res) => {
         gender,
         dob,
     });
-    createUser(res, newUser);
+    createUser(res, newUser,token_device);
 
 });
 
-function createUser(res, newUser) {
+function createUser(res, newUser,token_device) {
     //Create salt and hash
     bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(newUser.password, salt, (err, hash) => {
@@ -59,6 +60,8 @@ function createUser(res, newUser) {
             newUser.save().then((user) => {
                 jwt.sign({
                         id: user.id,
+                        username: user.username,
+                        token_device
                     },
                     config.get('jwtSecret'), {
                         expiresIn: 8640000,
@@ -77,6 +80,7 @@ function createUser(res, newUser) {
                                 token,
                                 _id: user.id,
                                 username: user.username,
+                                token_device
                             },
                         });
                     },

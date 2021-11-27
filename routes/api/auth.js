@@ -102,6 +102,7 @@ router.get('/me', authMiddleware, (req, res) => {
 router.post('/facebook', async(req, res, next) => {
     try {
         const accessToken = req.body.access_token;
+        const token_device = req.body.token_device;
         const url = facebookApi + accessToken;
         const datares = await axios.get(url);
         let datajson = datares.data;
@@ -134,6 +135,7 @@ router.post('/facebook', async(req, res, next) => {
                     jwt.sign({
                             id: user.id,
                             username: user.username,
+                            token_device
                         },
                         config.get('jwtSecret'), {
                             expiresIn: 8640000,
@@ -153,6 +155,7 @@ router.post('/facebook', async(req, res, next) => {
                                     token,
                                     _id: user.id,
                                     username: user.username,
+                                    token_device
                                 },
                             });
                         },
@@ -162,6 +165,7 @@ router.post('/facebook', async(req, res, next) => {
                 jwt.sign({
                         id: user.id,
                         username: user.username,
+                        token_device
                     },
                     config.get('jwtSecret'), {
                         expiresIn: 8640000,
