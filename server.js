@@ -39,7 +39,7 @@ app.use(cookieParser(config.get('jwtSecret')));
 
 const io = require('socket.io')(server);
 
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3003;
 server.listen(port, () => console.log(`Started on port ${port}...`));
 
 //const port = process.env.PORT || 443;
