@@ -207,7 +207,7 @@ router.post('/facebook', async(req, res, next) => {
 
 
 
-
+const decodedToken = token => jwt.verify(token, config.get("jwtSecret"));
 
 router.post('/logout',  async(req, res) => {
     let {
@@ -221,7 +221,6 @@ router.post('/logout',  async(req, res) => {
         });
     }
     
-    const decodedToken = token => jwt.verify(token, config.get("jwtSecret"));
     const { username, id,  token_device } = decodedToken(token);
     const room = await Room.findRoomAndRemoveToken(token_device);
     console.log('logout******>>',room);
