@@ -176,7 +176,7 @@ const connect = io => {
                     const user = await User.findById({
                         _id: socket.userId
                     })
-                    console.log(user);
+                    //console.log(user);
                     let report = user.report;
 
                     for (let word of words) {
@@ -197,7 +197,7 @@ const connect = io => {
                     //-------------------------------------------------------------------------------------------
                     //console.log('============socket.token_device > ', socket.token_device);
                     //console.log('============socket.token_device Me> ', token_device);
-
+                    console.log('r.token_devices',r.token_devices);
                     const messageFi = {
                         notification: {
                             title:"Message from people",
