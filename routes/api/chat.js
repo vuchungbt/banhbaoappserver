@@ -216,9 +216,19 @@ const connect = io => {
                         tokens: listtoken
                     };
                     console.log('--------listtoken---------:',listtoken);
+                    console.log('--------messageFi---------:',messageFi);
 
-                      await admin.messaging().send(messageFi).then((resp)=> {
-                          console.log("Send THEN ",resp) ;
+                      await admin.messaging().sendMulticast(messageFi).then((respx)=> {
+                          console.log("Send THEN ",respx) ;
+                          if (respx.failureCount > 0) {
+                            const failedTokens = [];
+                            respx.responses.forEach((resp, idx) => {
+                              if (!resp.success) {
+                                failedTokens.push(registrationTokens[idx]);
+                              }
+                            });
+                            console.log('List of tokens that caused failures: ' + failedTokens);
+                          }
                       })
                       .catch((er)=>{
                         console.log("Send error ",er) ;
