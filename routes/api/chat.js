@@ -207,8 +207,8 @@ const connect = io => {
                            message:message.content
                         },
                         token: r.token_devices
-                      };
-                      admin.messaging().send(messageFi).then((resp)=> {
+                    };
+                    await admin.messaging().send(messageFi).then((resp)=> {
                           console.log("Send THEN ",resp) ;
                       })
                       .catch((er)=>{
