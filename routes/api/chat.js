@@ -49,7 +49,9 @@ const connect = io => {
                 id,
                 token_device
             } = decodedToken(token);
-            console.log(username, id);
+            console.log('========Chatt:ID===', id);
+            console.log('========Chatt:username===', username);
+            console.log('========Chatt:token_device===', token_device);
             socket.username = username;
             socket.userId = id;
             socket.on("find-partner", async(data) => {
@@ -91,7 +93,7 @@ const connect = io => {
                     {
                         console.log('no body - push mysefl');
                         token_device.token_device1 = token_device;
-                        
+                        console.log('1================Chat:',token_device);
                         let client = {
                             socket: socket,
                             username: socket.username,
@@ -104,6 +106,7 @@ const connect = io => {
                             // tạo phòng 
                             _.remove(clients, client => client.userId === userToCreateRoom.userId);
                             token_device.token_device2 = token_device;
+                            console.log('2================Chat:',token_device);
                             // findOrCreateRoomObject by memberIds
                             const roomId = await RoomDetails.findRoomOrCreateOneWithMembers([userToCreateRoom.userId, socket.userId]);
 
@@ -148,7 +151,8 @@ const connect = io => {
 
                     }
                     socket.token_device = token_device;
-                    console.log('socket.token_device',socket.token_device);
+                    console.log('12=============token_device===Chat:',token_device);
+                    console.log('22=============socket.token_device:',socket.token_device);
                 }
 
             });
