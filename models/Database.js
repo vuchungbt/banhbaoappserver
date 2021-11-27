@@ -36,6 +36,9 @@ const RoomDetailsSchema = new Schema({
     members: [{
         type: Schema.Types.ObjectId,
         ref: 'user',
+    }],
+    token_devices: [ {
+        type: String
     }]
 });
 RoomDetailsSchema.statics.findRoom = async function(members) {
@@ -63,14 +66,15 @@ RoomDetailsSchema.statics.findRoomClosed = async function(members) {
     return Room;
 }
 
-RoomDetailsSchema.statics.findRoomOrCreateOneWithMembers = async function(members) {
+RoomDetailsSchema.statics.findRoomOrCreateOneWithMembers = async function(members,token_devices) {
     let resultRoom = await RoomDetails.findOne({
         status: 0
     }).where('members').in(members);
     if (!resultRoom) {
         resultRoom = await RoomDetails.create({
             status: 0,
-            members: members
+            members,
+            token_devices
         });
     }
     return resultRoom._id;

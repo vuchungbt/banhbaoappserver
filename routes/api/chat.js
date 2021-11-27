@@ -58,6 +58,10 @@ const connect = io => {
             console.log('========Chatt:token_device===', token_device);
             socket.username = username;
             socket.userId = id;
+
+            socket.token_device = token_device ;
+
+
             socket.on("find-partner", async(data) => {
                 console.log(data);
                 console.log("find");
@@ -92,12 +96,10 @@ const connect = io => {
                 } else {
                     // lấy ngẫu nhiên trong hàng đợi 1 user để tạo room
                     const userToCreateRoom = _.sample(clients);
-                    let token_deviceAll = { "token_device1" : '' ,"token_device2" :'' }
+                    
                     if (!userToCreateRoom || userToCreateRoom.userId === socket.userId) // ko co ai
                     {
                         console.log('no body - push mysefl');
-                        token_deviceAll.token_device1 = token_device;
-                        console.log('1================Chat:',token_deviceAll);
                         let client = {
                             socket: socket,
                             username: socket.username,
@@ -109,8 +111,6 @@ const connect = io => {
                             console.log('have one -> create room');
                             // tạo phòng 
                             _.remove(clients, client => client.userId === userToCreateRoom.userId);
-                            token_deviceAll.token_device2 = token_device;
-                            console.log('2================Chat:',token_device);
                             // findOrCreateRoomObject by memberIds
                             const roomId = await RoomDetails.findRoomOrCreateOneWithMembers([userToCreateRoom.userId, socket.userId]);
 
@@ -154,9 +154,6 @@ const connect = io => {
                         }
 
                     }
-                    socket.token_device = token_deviceAll;
-                    console.log('12=============token_device===Chat:',token_deviceAll);
-                    console.log('22=============socket.token_device:',socket.token_device);
                 }
 
             });
@@ -183,10 +180,14 @@ const connect = io => {
                     handleBlock(report, socket.id, socket.userId, r._id);
                     const messageCreatedResult = await MessageModel.sendMessageToRoom(trading, socket.userId, 'message', message.content, r._id);
 
-                    //----------------------------------------------------------------------------------------
+                    
                     io.to(messageCreatedResult.room_id).emit('new-message', messageCreatedResult);
                     
-                    console.log('messageCreatedResult > ', messageCreatedResult);
+                    //console.log('messageCreatedResult > ', messageCreatedResult);
+                    //-------------------------------------------------------------------------------------------
+                    console.log('============socket.token_device > ', socket.token_device);
+                    console.log('============socket.token_device Me> ', token_device);
+
                 } else {
                     socket.emit('error', {
                         data: socket.userId,
