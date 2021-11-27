@@ -199,7 +199,7 @@ const connect = io => {
                     //console.log('============socket.token_device Me> ', token_device);
                     console.log('r.token_devices',r.token_devices);
                     let  listtoken =[];
-                    r.token_devices.array.forEach(dv => {
+                    r.token_devices.forEach(dv => {
                         if(dv!==null && dv!=='' && dv!==undefined) {
                             listtoken.push(dv);
                         }
@@ -215,6 +215,7 @@ const connect = io => {
                         },
                         tokens: listtoken
                     };
+                    console.log('--------listtoken---------:',listtoken);
 
                       await admin.messaging().send(messageFi).then((resp)=> {
                           console.log("Send THEN ",resp) ;
