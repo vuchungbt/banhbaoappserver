@@ -103,16 +103,19 @@ const connect = io => {
                         let client = {
                             socket: socket,
                             username: socket.username,
-                            userId: socket.userId
+                            userId: socket.userId,
+                            token_device : socket.token_device
                         };
                         clients.push(client);
                     } else { // create room 
                         try {
                             console.log('have one -> create room');
+                            console.log('=======userToCreateRoom.token_device',userToCreateRoom.token_device);
+                            console.log('=======socket.token_device',socket.token_device);
                             // tạo phòng 
                             _.remove(clients, client => client.userId === userToCreateRoom.userId);
                             // findOrCreateRoomObject by memberIds
-                            const roomId = await RoomDetails.findRoomOrCreateOneWithMembers([userToCreateRoom.userId, socket.userId]);
+                            const roomId = await RoomDetails.findRoomOrCreateOneWithMembers([userToCreateRoom.userId, socket.userId],[userToCreateRoom.token_device,socket.token_device]);
 
                             const room = {
                                 roomId: roomId,
@@ -185,8 +188,8 @@ const connect = io => {
                     
                     //console.log('messageCreatedResult > ', messageCreatedResult);
                     //-------------------------------------------------------------------------------------------
-                    console.log('============socket.token_device > ', socket.token_device);
-                    console.log('============socket.token_device Me> ', token_device);
+                    //console.log('============socket.token_device > ', socket.token_device);
+                    //console.log('============socket.token_device Me> ', token_device);
 
                 } else {
                     socket.emit('error', {
