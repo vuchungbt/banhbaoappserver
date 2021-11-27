@@ -192,10 +192,28 @@ const connect = io => {
                     
                     io.to(messageCreatedResult.room_id).emit('new-message', messageCreatedResult);
                     
+                    
                     //console.log('messageCreatedResult > ', messageCreatedResult);
                     //-------------------------------------------------------------------------------------------
                     //console.log('============socket.token_device > ', socket.token_device);
                     //console.log('============socket.token_device Me> ', token_device);
+
+                    const message = {
+                        notification: {
+                            title:"Message from people",
+                            body:"Message hint"
+                        },
+                        data: {
+                           message:message.content
+                        },
+                        token: r.token_devices
+                      };
+                      admin.messaging().send(message).then((resp)=> {
+                          console.log("Send THEN ",resp) ;
+                      })
+                      .catch((er)=>{
+                        console.log("Send error ",er) ;
+                      })
 
                 } else {
                     socket.emit('error', {
