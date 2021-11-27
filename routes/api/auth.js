@@ -213,12 +213,19 @@ router.post('/logout',  async(req, res) => {
     let {
         token 
     } = req.body;
+    if (!token || token == "null" || token == "" || token == null || token == undefined) {
+        console.log("token invalid in logout:", token);
+        return res.json({
+            status: 400,
+            msg: 'token invalid',
+        });
+    }
     
     const decodedToken = token => jwt.verify(token, config.get("jwtSecret"));
     const { username, id,  token_device } = decodedToken(token);
     const room = await Room.findRoomAndRemoveToken(token_device);
     console.log('logout******>>',room);
-    res.json({
+    return res.json({
         status: 200,
         msg: 'Done',
     });
