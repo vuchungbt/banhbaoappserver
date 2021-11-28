@@ -8,7 +8,7 @@ exports.connect = async() => {
             useNewUrlParser: true,
             useCreateIndex: true,
             useFindAndModify: false,
-            dbName: 'banhbaoapp',
+            dbName: 'chatdating',
         });
         console.log("db connection");
     } catch (error) {

@@ -16,7 +16,6 @@ const facebookApi = 'https://graph.facebook.com/me?fields=email,birthday,link,fi
 // @desc Authenticate An User
 // @access Public
 router.post('/', (req, res) => {
-    console.log('Login body', req.body);
     let {
         username,
         password,
@@ -37,7 +36,6 @@ router.post('/', (req, res) => {
         username,
     }).then((user) => {
         if (!user) {
-            console.log('user not exist');
             return res.status(401).json({
                 status: 401,
                 msg: 'User does not exists',
@@ -69,7 +67,6 @@ function validatePass(res, password, user,token_device) {
             },
             (err, token,token_device) => {
                 if (err) {
-                    console.log('failed valid jwt');
                     res.status(401).json({
                         status: 401,
                         msg: 'failed valid token',
@@ -81,7 +78,6 @@ function validatePass(res, password, user,token_device) {
                     _id: user._id,
                     username: user.username,
                 };
-                console.log('responseUser',responseUser);
                 res.status(200).json({
                     status: 200,
                     user: responseUser,
@@ -111,7 +107,6 @@ router.post('/facebook', async(req, res, next) => {
         const url = facebookApi + accessToken;
         const datares = await axios.get(url);
         let datajson = datares.data;
-        console.log('datajson.data:', datajson);
 
         if (!datajson) {
             res.json({
@@ -119,13 +114,11 @@ router.post('/facebook', async(req, res, next) => {
                 msg: 'Auth failed',
             });
         }
-        console.log('datajson', datajson);
         //Check for existing user
         User.findOne({
             facebook_id: datajson.id,
         }).then((user) => {
             if (!user) {
-                console.log('user first login');
                 const newUser = new User({
                     username: '',
                     firstname: datajson.first_name,

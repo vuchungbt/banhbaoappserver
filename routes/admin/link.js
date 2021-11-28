@@ -23,7 +23,6 @@ router.post("/create", auth.logged, async(req, res) => {
         const l = await Link.findOne({
             name
         })
-        console.log(l);
         if (l) {
             res.render("link/create.pug", {
                 mess: "Tên link đã tồn tại"

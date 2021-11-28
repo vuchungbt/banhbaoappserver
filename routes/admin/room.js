@@ -21,8 +21,6 @@ router.get('/:page', async(req, res) => {
     page - 1 <= 0 ? (prevPage = page) : (prevPage = page - 1);
     page + 1 > pages.length ? (nextPage = page) : (nextPage = page + 1);
 
-    console.log(prevPage, page, nextPage);
-    console.log(pages);
     res.render('room/showroom.pug', {
         rooms,
         currentPage: page,

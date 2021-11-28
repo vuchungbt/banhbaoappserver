@@ -83,8 +83,6 @@ RoomDetailsSchema.statics.findRoomAndRemoveToken = async function(token_device) 
     let resultRoom = await RoomDetails.findOne({
         status: 0
     }).where('token_devices').in(token_device);
-    console.log('*****IN room* resultRoom',resultRoom);
-    console.log('*****IN room* token_device',token_device);
     
     if (resultRoom) {
         resultRoom.token_devices.remove(token_device);

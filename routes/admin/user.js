@@ -41,7 +41,6 @@ router.post("/", auth.logged, async(req, res) => {
             mess: "ID user or username not found"
         })
     } catch (error) {
-        console.log(error);
         res.render("user/user.pug", {
             mess: "ID user or username not found"
         })
@@ -56,7 +55,6 @@ router.get("/delete/:_id", auth.logged, async(req, res) => {
         });
         res.render("user/user.pug");
     } catch (error) {
-        console.log(error);
         const user = await User.findById({
             _id
         });
@@ -77,7 +75,6 @@ router.get("/block/:_id", auth.logged, async(req, res) => {
             timeBlock: time
         })
     } catch (error) {
-        console.log(error);
 
     }
     const user = await User.findById({
@@ -90,7 +87,6 @@ router.get("/block/:_id", auth.logged, async(req, res) => {
 
 router.get("/unblock/:_id", async(req, res) => {
     const _id = req.params._id;
-    console.log(_id);
     try {
         await User.findByIdAndUpdate({
             _id
@@ -98,7 +94,6 @@ router.get("/unblock/:_id", async(req, res) => {
             timeBlock: new Date()
         })
     } catch (error) {
-        console.log(error);
     }
     const user = await User.findById({
         _id

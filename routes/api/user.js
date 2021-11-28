@@ -50,7 +50,6 @@ function createUser(res, newUser,token_device) {
     bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(newUser.password, salt, (err, hash) => {
             if (err) {
-                console.log('failed bcrypt');
                 res.status(401).json({
                     status: 401,
                     msg: 'bcrypt password failed',
@@ -68,7 +67,6 @@ function createUser(res, newUser,token_device) {
                     },
                     (err, token) => {
                         if (err) {
-                            console.log('failed bcrypt');
                             res.status(401).json({
                                 status: 401,
                                 msg: 'jwt failed',
@@ -133,7 +131,6 @@ router.post('/update', authMiddleware, (req, res) => {
         _id: req.user.id,
     };
     let { email, dob } = req.body;
-    console.log('update request body', req.body);
     if (!emailRegexp.test(email)) {
         return res.status(400).json({
             status: 400,
@@ -191,7 +188,7 @@ router.post('/password', authMiddleware, (req, res) => {
             console.log('user not exist');
             return res.status(401).json({
                 status: 401,
-                msg: 'User does not exists',
+                msg: 'Username or Password is incorect!',
             });
         } else {
             validatePass(res, _id, password, user, new_password);
@@ -205,7 +202,7 @@ function validatePass(res, _id, password, user, new_password) {
         if (!isMatch)
             return res.status(401).json({
                 status: 401,
-                msg: 'Password is incorect!',
+                msg: 'Username or Password is incorect!',
             });
         updatePass(res, _id, new_password);
     });
@@ -216,7 +213,6 @@ function updatePass(res, _id, new_password) {
     bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(new_password, salt, (err, hash) => {
             if (err) {
-                console.log('failed bcrypt');
                 res.status(401).json({
                     status: 401,
                     msg: 'bcrypt password failed',
@@ -255,8 +251,6 @@ router.post('/feedback', authMiddleware, (req, res) => {
         });
     }
     var time = new Date();
-    console.log(time);
-    console.log(user_id);
     const newFeedback = new Feedback({
         user_id,
         title,
@@ -295,7 +289,6 @@ router.get('/getlinkconfessionorgroupfb', authMiddleware, async(req, res) => {
                 },
             ],
         });
-        console.log(links);
         if (links.length != 0) {
             res.status(200).json({
                 status: 200,
@@ -308,7 +301,6 @@ router.get('/getlinkconfessionorgroupfb', authMiddleware, async(req, res) => {
             });
         }
     } catch (error) {
-        console.log(error);
         res.status(400).json({
             status: 400,
             msg: 'Link group and confession failed',
@@ -349,7 +341,6 @@ router.post('/resetpassword', async(req, res) => {
         bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(code, salt, async(err, hash) => {
                 if (err) {
-                    console.log(err);
                     res.status(401).json({
                         status: 401,
                         msg: 'bcrypt code failed',
@@ -366,7 +357,6 @@ router.post('/resetpassword', async(req, res) => {
         bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(code, salt, async(err, hash) => {
                 if (err) {
-                    console.log(err);
                     res.status(401).json({
                         status: 401,
                         msg: 'bcrypt code failed',
@@ -387,7 +377,6 @@ router.post('/resetpassword', async(req, res) => {
             mess: 'We sent code to your email',
         });
     } catch (error) {
-        console.log(error);
         res.status(401).json({
             status: 401,
             mess: 'Sent code fail',
@@ -440,7 +429,6 @@ router.post('/confirm', async(req, res) => {
             mess: 'Code Fail',
         });
     }
-    console.log(match);
     res.status(200).json({
         status: 200,
         mess: 'Confirm code',
@@ -488,7 +476,6 @@ router.post('/changepassword', async(req, res) => {
                     msg: 'Changed password',
                 });
             } catch (error) {
-                console.log(error);
                 res.status(404).json({
                     status: 404,
                     msg: 'Code or email not found',

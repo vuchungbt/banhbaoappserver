@@ -27,7 +27,6 @@ module.exports.validate = async(req, res, next) => {
         id: admin._id,
         username: admin.username
     }, config.get("jwtSecret"));
-    console.log(token);
     res.cookie("token", token, {
         httpOnly: true,
         maxAge: 1800000,
@@ -39,7 +38,7 @@ module.exports.validate = async(req, res, next) => {
 module.exports.logged = async(req, res, next) => {
     const token = req.signedCookies.token;
     if (!token || token == "null" || token == "" || token == null || token == undefined) {
-        console.log("no token");
+        console.log("no admin token");
         return res.redirect("/admin/auth/login");
     }
     try {
@@ -47,7 +46,7 @@ module.exports.logged = async(req, res, next) => {
         req.admin = decodedToken;
         next();
     } catch (error) {
-        console.log("token is invalid");
+        console.log("token admin is invalid");
         res.redirect("/admin/auth/login");
     }
 }

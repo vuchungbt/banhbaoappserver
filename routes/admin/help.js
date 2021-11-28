@@ -33,7 +33,6 @@ router.get("/delete/:_id", auth.logged, async(req, res) => {
         });
         res.redirect("/admin/help");
     } catch (error) {
-        console.log(error);
         res.redirect("/admin/help");
     }
 });
@@ -56,7 +55,6 @@ router.post("/update/:_id", auth.logged, async(req, res) => {
         }, req.body);
         res.redirect("/admin/help");
     } catch (error) {
-        console.log(error);
         res.redirect("/admin/update");
     }
 })

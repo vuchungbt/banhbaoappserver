@@ -124,8 +124,6 @@
         $(document).ready(function() {
             let currentRoomId = '';
             $('#findpartner').click(function() {
-                console.log('find-click');
-                console.log('sap tim');
                 socket.emit('find-partner', 'alalo');
                 console.log('dang tim');
                 socket.on('joined-to-room', function({

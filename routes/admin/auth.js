@@ -14,7 +14,6 @@ router.post('/register', authAdmin.validateUser, async(req, res) => {
         key
     } = req.body;
     if (key != config.get("key")) {
-        console.log('get key failed');
         return res.status(400).json({
             status: 400,
             msg: 'get key failed',
@@ -24,7 +23,6 @@ router.post('/register', authAdmin.validateUser, async(req, res) => {
     const admin = await Admin.findOne({
         username,
     });
-    console.log(admin);
     if (admin) {
         return res.status(400).json({
             status: 400,

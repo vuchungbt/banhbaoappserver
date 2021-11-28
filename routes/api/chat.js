@@ -39,23 +39,24 @@ const connect = io => {
     io.on("connection", function(socket) {
         // number++;
         // socket.emit("userActive", number);
-        console.log(number);
-        console.log("connection");
+
 
         const token = socket.handshake.query.token;
         
-        console.log(token);
         if (!token || token == "null" || token == "" || token == null || token == undefined) {
-            console.log("token invalid:", token);
+            console.log("token chat invalid:");
+            socket.emit('error', {
+                data: socket.userId,
+                msg: 'token invalid',
+                type: 'find-partner'
+            });
+            return;
         } else {
             const {
                 username,
                 id,
                 token_device
             } = decodedToken(token);
-            console.log('========Chatt:ID===', id);
-            console.log('========Chatt:username===', username);
-            console.log('========Chatt:token_device===', token_device);
             socket.username = username;
             socket.userId = id;
 
@@ -63,8 +64,7 @@ const connect = io => {
 
 
             socket.on("find-partner", async(data) => {
-                console.log(data);
-                console.log("find");
+
                 let user = await User.findById({
                     _id: socket.userId
                 });
@@ -74,17 +74,15 @@ const connect = io => {
                     console.log("user be blocked");
                     return;
                 }
-                console.log('find partner starting...');
-                
+               
 
                 const r = await RoomDetails.findRoomActive(socket.userId);
-                console.log('findRoom :', r);
 
                 if (r != null && r.status === 0) {
 
                     const trading = r.members.find(element => element != socket.userId);
-                    console.log('myID >', socket.userId);
-                    console.log('partnerID >', trading);
+                    console.log('myID chat >', socket.userId);
+                    console.log('partnerID chat >', trading);
                     const room = {
                         roomId: r._id,
                         userId: trading,
@@ -93,11 +91,8 @@ const connect = io => {
                     io.to(room.roomId).emit('joined-to-room', room);
                     console.log('reconect success when find-partner', room);
                     
-                    console.log('reconect success when find-partner', r.token_devices);
                     r.token_devices.push(socket.token_device);
                     r.save();
-                    console.log('RRRRRRRRRRR', r);
-                    
 
                 } else {
                     // lấy ngẫu nhiên trong hàng đợi 1 user để tạo room
@@ -115,9 +110,6 @@ const connect = io => {
                         clients.push(client);
                     } else { // create room 
                         try {
-                            console.log('have one -> create room');
-                            console.log('=======userToCreateRoom.token_device',userToCreateRoom.token_device);
-                            console.log('=======socket.token_device',socket.token_device);
                             // tạo phòng 
                             _.remove(clients, client => client.userId === userToCreateRoom.userId);
                             // findOrCreateRoomObject by memberIds
@@ -131,8 +123,6 @@ const connect = io => {
 
                             userToCreateRoom.socket.join(room.roomId);
 
-                            console.log('prepare joined-to-room', room);
-
                             io.to(room.roomId).emit('joined-to-room', room);
 
                             const user = await User.findOne({
@@ -141,14 +131,12 @@ const connect = io => {
 
                             user.trading = user.trading + 1;
                             user.save();
-                            console.log('trading1>>', user.trading);
 
                             const user2 = await User.findOne({
                                 _id: socket.userId
                             });
                             user2.trading = user2.trading + 1;
                             user2.save();
-                            console.log('trading2>>', user2.trading);
 
                             console.log('joined-to-room successfully');
                             const messageCreatedResult = await MessageModel.sendMessageToRoom(userToCreateRoom.userId, socket.userId, 'system', 'The conversation begins.\nSay \'bye\' to end conversation', room.roomId);
@@ -176,7 +164,6 @@ const connect = io => {
                     const user = await User.findById({
                         _id: socket.userId
                     })
-                    //console.log(user);
                     let report = user.report;
 
                     for (let word of words) {
@@ -192,12 +179,8 @@ const connect = io => {
                     
                     io.to(messageCreatedResult.room_id).emit('new-message', messageCreatedResult);
                     
-                    
-                    //console.log('messageCreatedResult > ', messageCreatedResult);
                     //-------------------------------------------------------------------------------------------
-                    //console.log('============socket.token_device > ', socket.token_device);
-                    //console.log('============socket.token_device Me> ', token_device);
-                    console.log('r.token_devices',r.token_devices);
+                    
                     let  listtoken =[];
                     r.token_devices.forEach(dv => {
                         if(dv!==null && dv!=='' && dv!==undefined) {
@@ -215,8 +198,6 @@ const connect = io => {
                         },
                         tokens: listtoken
                     };
-                    console.log('--------listtoken---------:',listtoken);
-                    console.log('--------messageFi---------:',messageFi);
 
                       await admin.messaging().sendMulticast(messageFi).then((respx)=> {
                           console.log("Send THEN ",respx) ;
@@ -283,7 +264,6 @@ const connect = io => {
                             roomId
                         });
                         socket.leave(roomId);
-                        console.log(roomId);
                     }
 
                 } else {
@@ -313,7 +293,6 @@ const connect = io => {
 
                         const messageCreatedResult = await MessageModel.sendMessageToRoom(trading, socket.userId, 'send-heart', 'You have send a heart', heart.roomId);
                         io.to(heart.roomId).emit('new-message', messageCreatedResult);
-                        console.log('received-heart:>>', messageCreatedResult);
                     }
 
                 } else {
@@ -357,7 +336,7 @@ const connect = io => {
 
             socket.on('leave-room', async(roomId) => {
 
-                console.log('leave-room waiting');
+                
                 const r = await RoomDetails.findRoomActive(socket.userId);
                 if (!r) {
                     console.log('leave done waiting : roomId not found');
@@ -368,7 +347,6 @@ const connect = io => {
                     });
                 } else {
 
-                    console.log(r);
                     // 0 : active
                     r.status = 1; // 1 : one left
                     r.save();
@@ -383,15 +361,13 @@ const connect = io => {
                     const trading = r.members.find(element => element != socket.userId);
                     const messageCreatedResult = await MessageModel.sendMessageToRoom(trading, socket.userId, 'system', 'The conversation ended', room.roomId);
                     io.to(messageCreatedResult.room_id).emit('new-message', messageCreatedResult);
-                    console.log('leave done', r);
                 }
             });
 
             socket.on('reconnection', async(userId) => {
-                console.log('reconnect waiting ');
+                console.log('reconnect waiting... ');
 
                 const r = await RoomDetails.findRoomActive(socket.userId);
-                console.log('reconnect room: ', r);
 
                 if (r) {
                     const trading = r.members.find(element => element != socket.userId);
@@ -411,7 +387,6 @@ const connect = io => {
             });
             socket.on("disconnect", reason => {
                 _.remove(clients, client => client.userId === socket.userId);
-                console.log("disconnected", socket.username, socket.userId, socket.disconnected, reason);
             });
         }
 

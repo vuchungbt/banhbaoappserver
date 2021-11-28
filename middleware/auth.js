@@ -6,7 +6,6 @@ function auth(req, res, next) {
     const token = req.header("auth-token");
 
     if (!token || token == "null" || token == "" || token == null || token == undefined) {
-        console.log("---token undefined---");
         return res.status(401).json({
             status: 401,
             msg: "No token, authorization denied"
@@ -21,7 +20,6 @@ function auth(req, res, next) {
         req.user = decodedToken;
         next();
     } catch (e) {
-        console.log("Token is invalid ---------", e);
         res.status(400).json({
             status: 400,
             msg: "Token is invalid"

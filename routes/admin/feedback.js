@@ -11,7 +11,6 @@ router.get("/", async(req, res) => {
     })
 })
 router.post("/", auth.logged, async(req, res) => {
-    console.log(req.body);
     await Feedback.create(req.body);
     res.status(200).json(req.body);
 })

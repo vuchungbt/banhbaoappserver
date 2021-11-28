@@ -30,8 +30,6 @@ router.get("/link", (req, res) => {
 // @desc Create An Link Group
 // @access Public
 router.post("/link", authMiddleware, (req, res) => {
-    console.log("Register body :", req.body);
-
     let { name, link, description} = req.body;
 
     if (!name || !link) {
@@ -82,8 +80,6 @@ router.post("/update", authMiddleware, (req, res) => {
 
     var condition = { name: req.name };
     
-    console.log("update request body", req.body);
-
     updateLink(condition, req.body)
       .then(updatedLink =>
         res.json({

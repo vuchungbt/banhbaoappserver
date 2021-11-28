@@ -12,7 +12,6 @@ router.get("/getAll", auMiddleware, async(req, res) => {
             helps
         });
     } catch (error) {
-        console.log(error);
         res.status(400).json({
             status: 400,
             msg: "Get all helps failed"
