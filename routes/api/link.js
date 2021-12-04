@@ -11,14 +11,14 @@ router.get("/link", (req, res) => {
     Link.findOne(condition)
         .then(link => {
             if (link) {
-                res.status(200)
+                return res.status(200)
                 .json({
                     status:200,
                     link: link
                 });
               
             } else {
-              res.status(400).json({
+                return res.status(400).json({
                   status:400,
                    msg: "Get link infor failed"
                  });
@@ -60,7 +60,7 @@ router.post("/link", authMiddleware, (req, res) => {
 
 function createLink(res, newLink) {
     newLink.save().then(link => {
-        res.status(200)
+        return res.status(200)
               .json({
                 status:200,
                 user: {

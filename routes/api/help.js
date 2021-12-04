@@ -7,12 +7,12 @@ const mongoose = require("mongoose");
 router.get("/getAll", auMiddleware, async(req, res) => {
     try {
         const helps = await Help.find();
-        res.status(200).json({
+        return res.status(200).json({
             status: 200,
             helps
         });
     } catch (error) {
-        res.status(400).json({
+        return res.status(400).json({
             status: 400,
             msg: "Get all helps failed"
         });
@@ -28,12 +28,12 @@ router.get("/:_id", auMiddleware, async(req, res) => {
             const help = await Help.findById({
                 _id
             });
-            res.status(200).json({
+            return res.status(200).json({
                 status: 200,
                 help
             })
         } else {
-            res.status(404).json({
+            return res.status(404).json({
                 status: 404,
                 msg: "Not Found"
             });

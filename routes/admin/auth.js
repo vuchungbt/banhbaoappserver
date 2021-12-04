@@ -32,7 +32,7 @@ router.post('/register', authAdmin.validateUser, async(req, res) => {
     bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(password, salt, async(err, hash) => {
             if (err) {
-                res.status(401).json({
+                return res.status(401).json({
                     status: 401,
                     msg: 'bcrypt password failed',
                 });
@@ -42,7 +42,7 @@ router.post('/register', authAdmin.validateUser, async(req, res) => {
                 username,
                 password,
             });
-            res.status(200).json({
+            return res.status(200).json({
                 username,
             });
         });

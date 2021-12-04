@@ -12,6 +12,6 @@ router.get("/", async(req, res) => {
 })
 router.post("/", auth.logged, async(req, res) => {
     await Feedback.create(req.body);
-    res.status(200).json(req.body);
+    return res.status(200).json(req.body);
 })
 module.exports = router;

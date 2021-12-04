@@ -67,7 +67,7 @@ function validatePass(res, password, user,token_device) {
             },
             (err, token,token_device) => {
                 if (err) {
-                    res.status(401).json({
+                    return res.status(401).json({
                         status: 401,
                         msg: 'failed valid token',
                     });
@@ -78,7 +78,7 @@ function validatePass(res, password, user,token_device) {
                     _id: user._id,
                     username: user.username,
                 };
-                res.status(200).json({
+                return  res.status(200).json({
                     status: 200,
                     user: responseUser,
                 });
@@ -141,12 +141,12 @@ router.post('/facebook', async(req, res, next) => {
                         (err, token) => {
                             if (err) {
                                 console.log('failed bcrypt jwt');
-                                res.status(401).json({
+                                return res.status(401).json({
                                     status: 401,
                                     msg: 'jwt failed',
                                 });
                             }
-                            res.status(200).json({
+                            return res.status(200).json({
                                 status: 200,
                                 first: 1,
                                 user: {
@@ -171,12 +171,12 @@ router.post('/facebook', async(req, res, next) => {
                     (err, token) => {
                         if (err) {
                             console.log('failed bcrypt jwt');
-                            res.status(401).json({
+                            return res.status(401).json({
                                 status: 401,
                                 msg: 'jwt failed',
                             });
                         }
-                        res.status(200).json({
+                        return res.status(200).json({
                             status: 200,
                             first: 0,
                             user: {

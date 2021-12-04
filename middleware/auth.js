@@ -20,7 +20,7 @@ function auth(req, res, next) {
         req.user = decodedToken;
         next();
     } catch (e) {
-        res.status(400).json({
+        return res.status(400).json({
             status: 400,
             msg: "Token is invalid"
         });
