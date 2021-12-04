@@ -274,21 +274,9 @@ router.post('/feedback', authMiddleware, (req, res) => {
 // @route POST api/user/getlinkconfessionorgroupfb
 // @desc get link confession or group
 // @access Public
-router.get('/getlinkconfessionorgroupfb', authMiddleware, async(req, res) => {
+router.get('/getlinkconfessionorgroupfb', async(req, res) => {
     try {
-        const links = await Link.find({
-            $or: [{
-                    name: {
-                        $eq: 'group',
-                    },
-                },
-                {
-                    name: {
-                        $eq: 'confession',
-                    },
-                },
-            ],
-        });
+        const links = await Link.find();
         if (links.length != 0) {
             res.status(200).json({
                 status: 200,
