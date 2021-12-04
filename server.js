@@ -39,8 +39,8 @@ app.use(cookieParser(config.get('jwtSecret')));
 
 const io = require('socket.io')(server);
 
-const port = process.env.PORT || 3016;
-server.listen(port, () => console.log(`Started on port ${port}...`));
+const port = process.env.PORT || 3017;
+server.listen(port, () => console.log(`Started new 1.0.1 on port ${port}...`));
 
 //const port = process.env.PORT || 443;
 //console.log('app is running on port ', port);
@@ -56,6 +56,9 @@ app.get('/', function(req, res) {
 });
 app.get('/document/v1.0.0/release', function(req, res) {
     res.render('document/document.ejs');
+});
+app.get('/document/v1.0.1/release', function(req, res) {
+    res.render('document/document1.0.1.ejs');
 });
 app.get('/document/admin/v1.0.0/release', function(req, res) {
     res.render('document/document-admin.ejs');
