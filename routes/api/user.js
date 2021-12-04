@@ -317,7 +317,7 @@ router.post('/resetpassword', async(req, res) => {
         email,
     });
     if (!user) {
-        res.status(404).json({
+        return  res.status(404).json({
             status: 404,
             msg: 'email not found',
         });
