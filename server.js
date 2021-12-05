@@ -40,8 +40,7 @@ app.use(cookieParser(config.get('jwtSecret')));
 const io = require('socket.io')(server);
 
 const port = process.env.PORT || 3016;
-const version = '1.0.1';
-server.listen(port, () => console.log(`Started new version ${version} on port ${port}...`));
+server.listen(port, () => console.log(`Started on port ${port}...`));
 
 //const port = process.env.PORT || 443;
 //console.log('app is running on port ', port);
