@@ -304,8 +304,9 @@ function generate() {
     }
     return id;
 }
-function getcodebyemail(req, res) {
 
+router.post('/getcode', async(req, res) => {
+    
     const email = req.body.email;
     const resetPass = await ResetPass.find({
         email
@@ -370,10 +371,6 @@ function getcodebyemail(req, res) {
             msg: 'Sent code fail',
         });
     }
-}
-
-router.post('/getcode', async(req, res) => {
-    getcodebyemail(req,res);
 });
 // @route POST api/user/resetPassword/:userId
 // @desc send code to email user

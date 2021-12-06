@@ -63,8 +63,8 @@ app.get('/document/v1.0.1/release', function(req, res) {
 app.get('/document/admin/v1.0.0/release', function(req, res) {
     res.render('document/document-admin.ejs');
 });
-app.get('/pravicy', function(req, res) {
-    res.render('document/pravicy.ejs');
+app.get('/remove', function(req, res) {
+    res.render('document/remove_user.ejs');
 });
 app.use(express.json());
 app.use(cors());
