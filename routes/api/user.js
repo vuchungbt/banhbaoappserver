@@ -441,7 +441,7 @@ router.post('/changepassword', async(req, res) => {
     if(!resetCode) {
         return res.status(404).json({
             status: 404,
-            mess: 'Code or email not found',
+            msg: 'Code or email not found',
         });
     }
     let enCode = resetCode.enCode;
@@ -449,7 +449,7 @@ router.post('/changepassword', async(req, res) => {
     if (!match) {
         return res.status(404).json({
             status: 404,
-            mess: 'Code or email not found',
+            msg: 'Code or email not found',
         });
     }
     bcrypt.genSalt(10, (err, salt) => {
@@ -497,7 +497,7 @@ router.post('/remove', async(req, res) => {
     if(!resetCode) {
         return res.status(404).json({
             status: 404,
-            mess: 'Code or email not found',
+            msg: 'Code or email not found',
         });
     }
     let enCode = resetCode.enCode;
@@ -505,7 +505,7 @@ router.post('/remove', async(req, res) => {
     if (!match) {
         return res.status(404).json({
             status: 404,
-            mess: 'Code or email not found',
+            msg: 'Code or email not found',
         });
     }
     bcrypt.genSalt(10, (err, salt) => {
