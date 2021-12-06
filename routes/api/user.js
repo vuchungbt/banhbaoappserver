@@ -41,11 +41,11 @@ router.post('/', validate.valiEmailUser, (req, res) => {
         gender,
         dob,
     });
-    createUser(res, newUser,token_device);
+    createUser(res, newUser, token_device);
 
 });
 
-function createUser(res, newUser,token_device) {
+function createUser(res, newUser, token_device) {
     //Create salt and hash
     bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(newUser.password, salt, (err, hash) => {
@@ -58,13 +58,13 @@ function createUser(res, newUser,token_device) {
             newUser.password = hash;
             newUser.save().then((user) => {
                 jwt.sign({
-                        id: user.id,
-                        username: user.username,
-                        token_device
-                    },
+                    id: user.id,
+                    username: user.username,
+                    token_device
+                },
                     config.get('jwtSecret'), {
-                        expiresIn: 8640000,
-                    },
+                    expiresIn: 8640000,
+                },
                     (err, token) => {
                         if (err) {
                             return res.status(401).json({
@@ -220,11 +220,11 @@ function updatePass(res, _id, new_password) {
             }
             new_password = hash;
             User.update({
-                    _id,
-                }, {
-                    password: new_password,
-                },
-                function(err, affected, resp) {
+                _id,
+            }, {
+                password: new_password,
+            },
+                function (err, affected, resp) {
                     return res.json({
                         status: 200,
                         msg: 'Update success',
@@ -274,7 +274,7 @@ router.post('/feedback', authMiddleware, (req, res) => {
 // @route POST api/user/getlinkconfessionorgroupfb
 // @desc get link confession or group
 // @access Public
-router.get('/getlinkconfessionorgroupfb', async(req, res) => {
+router.get('/getlinkconfessionorgroupfb', async (req, res) => {
     try {
         const links = await Link.find();
         if (links.length != 0) {
@@ -305,21 +305,21 @@ function generate() {
     return id;
 }
 
-router.post('/getcode', async(req, res) => {
-    
+router.post('/getcode', async (req, res) => {
+
     const email = req.body.email;
-    console.log('email:',email);
-    console.log('req.body.email:',req.body.email);
-    
+    console.log('email:', email);
+    console.log('req.body.email:', req.body.email);
+
     const resetPass = await ResetPass.find({
         email
     });
-    console.log('resetPass',resetPass);
+    console.log('resetPass', resetPass);
     const user = await User.findOne({
         email
     });
     if (!user) {
-        return  res.status(404).json({
+        return res.status(404).json({
             status: 404,
             msg: 'email not found',
         });
@@ -329,7 +329,7 @@ router.post('/getcode', async(req, res) => {
     const code = generate();
     if (resetPass.length != 0) {
         bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(code, salt, async(err, hash) => {
+            bcrypt.hash(code, salt, async (err, hash) => {
                 if (err) {
                     return res.status(401).json({
                         status: 401,
@@ -340,12 +340,12 @@ router.post('/getcode', async(req, res) => {
                     email
                 }, {
                     enCode: hash
-                }, );
+                });
             });
         });
     } else {
         bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(code, salt, async(err, hash) => {
+            bcrypt.hash(code, salt, async (err, hash) => {
                 if (err) {
                     return res.status(401).json({
                         status: 401,
@@ -362,13 +362,13 @@ router.post('/getcode', async(req, res) => {
     }
     try {
         sendmail(mailUser, code);
-        console.log('We sent code to',mailUser);
+        console.log('We sent code to', mailUser);
         return res.status(200).json({
             status: 200,
             msg: 'We sent code to your email'
         });
     } catch (error) {
-        console.log('We sent code Erorr',error);
+        console.log('We sent code Erorr', error);
         return res.status(401).json({
             status: 401,
             msg: 'Sent code fail',
@@ -378,17 +378,17 @@ router.post('/getcode', async(req, res) => {
 // @route POST api/user/resetPassword/:userId
 // @desc send code to email user
 // @access Public
-router.post('/resetpassword', async(req, res) => {
+router.post('/resetpassword', async (req, res) => {
     const email = req.body.email;
     const resetPass = await ResetPass.find({
         email
     });
-    console.log('resetPass',resetPass);
+    console.log('resetPass', resetPass);
     const user = await User.findOne({
         email
     });
     if (!user) {
-        return  res.status(404).json({
+        return res.status(404).json({
             status: 404,
             msg: 'email not found',
         });
@@ -398,7 +398,7 @@ router.post('/resetpassword', async(req, res) => {
     const code = generate();
     if (resetPass.length != 0) {
         bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(code, salt, async(err, hash) => {
+            bcrypt.hash(code, salt, async (err, hash) => {
                 if (err) {
                     return res.status(401).json({
                         status: 401,
@@ -409,12 +409,12 @@ router.post('/resetpassword', async(req, res) => {
                     email
                 }, {
                     enCode: hash
-                }, );
+                });
             });
         });
     } else {
         bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(code, salt, async(err, hash) => {
+            bcrypt.hash(code, salt, async (err, hash) => {
                 if (err) {
                     return res.status(401).json({
                         status: 401,
@@ -431,13 +431,13 @@ router.post('/resetpassword', async(req, res) => {
     }
     try {
         sendmail(mailUser, code);
-        console.log('We sent code to',mailUser);
+        console.log('We sent code to', mailUser);
         return res.status(200).json({
             status: 200,
             msg: 'We sent code to your email'
         });
     } catch (error) {
-        console.log('We sent code Erorr',error);
+        console.log('We sent code Erorr', error);
         return res.status(401).json({
             status: 401,
             msg: 'Sent code fail',
@@ -463,7 +463,7 @@ async function sendmail(mailUser, code) {
     });
 }
 
-router.post('/confirm', async(req, res) => {
+router.post('/confirm', async (req, res) => {
     const {
         code,
         email
@@ -499,7 +499,7 @@ router.post('/confirm', async(req, res) => {
     });
 });
 
-router.post('/changepassword', async(req, res) => {
+router.post('/changepassword', async (req, res) => {
     const {
         email,
         code,
@@ -508,7 +508,7 @@ router.post('/changepassword', async(req, res) => {
     const resetCode = await ResetPass.findOne({
         email
     });
-    if(!resetCode) {
+    if (!resetCode) {
         return res.status(404).json({
             status: 404,
             msg: 'Code or email not found',
@@ -523,7 +523,7 @@ router.post('/changepassword', async(req, res) => {
         });
     }
     bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(password, salt, async(err, hash) => {
+        bcrypt.hash(password, salt, async (err, hash) => {
             if (err) {
                 console.log(err);
                 return res.status(401).json({
@@ -536,7 +536,7 @@ router.post('/changepassword', async(req, res) => {
                     email,
                 }, {
                     password: hash,
-                }, );
+                });
                 await ResetPass.findOneAndRemove({
                     email,
                 });
@@ -556,24 +556,24 @@ router.post('/changepassword', async(req, res) => {
 
 //-----------------delete user---------------------
 
-router.post('/remove', async(req, res) => {
+router.post('/remove', async (req, res) => {
     const {
         email,
         code
     } = req.body;
-    console.log('remove user:',req.body);
+    console.log('remove user:', req.body);
     const resetCode = await ResetPass.findOne({
         email
     });
-    console.log('confirm code to remove:',resetCode);
-    if(!resetCode) {
+    console.log('confirm code to remove:', resetCode);
+    if (!resetCode) {
         return res.status(404).json({
             status: 404,
             msg: 'Code or email not found',
         });
     }
     let enCode = resetCode.enCode;
-    console.log('enCode:',enCode);
+    console.log('enCode:', enCode);
     const match = await bcrypt.compare(code, enCode);
     if (!match) {
         return res.status(404).json({
@@ -581,31 +581,15 @@ router.post('/remove', async(req, res) => {
             msg: 'Code or email not found',
         });
     }
-    console.log('match:',match);
-    bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(password, salt, async(err, hash) => {
-            console.log('hash:');
-            if (err) {
-                console.log(err);
-                return res.status(401).json({
-                    status: 401,
-                    msg: 'bcrypt code failed',
-                });
-            }
-            try {
-                await User.findOneAndRemove({ email});
-                await ResetPass.findOneAndRemove({email});
-                return res.status(200).json({
-                    status: 200,
-                    msg: 'Changed password',
-                });
-            } catch (error) {
-                return res.status(404).json({
-                    status: 404,
-                    msg: 'Code or email not found',
-                });
-            }
+    else {
+        
+        await User.findOneAndRemove({ email });
+        await ResetPass.findOneAndRemove({ email });
+        return res.status(200).json({
+            status: 200,
+            msg: 'Changed password',
         });
-    });
+    }
+    
 });
 module.exports = router;
