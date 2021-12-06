@@ -364,13 +364,13 @@ router.post('/resetpassword', async(req, res) => {
         console.log('We sent code to',mailUser);
         return res.status(200).json({
             status: 200,
-            mess: 'We sent code to your email'
+            msg: 'We sent code to your email'
         });
     } catch (error) {
         console.log('We sent code Erorr',error);
         return res.status(401).json({
             status: 401,
-            mess: 'Sent code fail',
+            msg: 'Sent code fail',
         });
     }
 });
@@ -410,7 +410,7 @@ router.post('/confirm', async(req, res) => {
         console.log('resetCode fail');
         return res.status(404).json({
             status: 404,
-            mess: 'Code not found',
+            msg: 'Code not found',
         });
     }
     let enCode = resetCode.enCode;
@@ -419,12 +419,12 @@ router.post('/confirm', async(req, res) => {
         console.log('resetCode not match');
         return res.status(404).json({
             status: 404,
-            mess: 'Code Fail',
+            msg: 'Code Fail',
         });
     }
     return res.status(200).json({
         status: 200,
-        mess: 'Confirm code OK',
+        msg: 'Confirm code OK',
         // userId: userId
     });
 });
