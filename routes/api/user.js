@@ -417,8 +417,8 @@ router.post('/confirm', async(req, res) => {
     const match = await bcrypt.compare(code, enCode);
     if (!match) {
         console.log('resetCode not match');
-        return res.status(400).json({
-            status: 400,
+        return res.status(404).json({
+            status: 404,
             mess: 'Code Fail',
         });
     }
@@ -485,68 +485,54 @@ router.post('/changepassword', async(req, res) => {
 });
 
 //-----------------delete user---------------------
-router.post('/remove', async(req, res) => {
-    const email = req.body.email;
-    const resetPass = await ResetPass.find({
-        email
-    });
-    const user = await User.findOne({
-        email
-    });
-    if (!user) {
-        return  res.status(404).json({
-            status: 404,
-            msg: 'email not found',
-        });
-    }
-    _id = user._id;
-    const mailUser = email;
-    const code = generate();
-    if (resetPass.length != 0) {
-        bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(code, salt, async(err, hash) => {
-                if (err) {
-                    return res.status(401).json({
-                        status: 401,
-                        msg: 'bcrypt code failed',
-                    });
-                }
-                await ResetPass.findOneAndUpdate({
-                    email,
-                }, {
-                    enCode: hash,
-                }, );
-            });
-        });
-    } else {
-        bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(code, salt, async(err, hash) => {
-                if (err) {
-                    return res.status(401).json({
-                        status: 401,
-                        msg: 'bcrypt code failed',
-                    });
-                }
-                await ResetPass.create({
-                    email: mailUser,
-                    userId: _id,
-                    enCode: hash,
-                });
-            });
-        });
-    }
-    try {
-        sendmail(mailUser, code);
-        return res.status(200).json({
-            status: 200,
-            mess: 'We sent code to your email',
-        });
-    } catch (error) {
-        return res.status(401).json({
-            status: 401,
-            mess: 'Sent code fail',
-        });
-    }
-});
 
+router.post('/remove', async(req, res) => {
+    const {
+        email,
+        code
+    } = req.body;
+    const resetCode = await ResetPass.findOne({
+        email
+    });
+    if(!resetCode) {
+        return res.status(404).json({
+            status: 404,
+            mess: 'Code or email not found',
+        });
+    }
+    let enCode = resetCode.enCode;
+    const match = await bcrypt.compare(code, enCode);
+    if (!match) {
+        return res.status(404).json({
+            status: 404,
+            mess: 'Code or email not found',
+        });
+    }
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(password, salt, async(err, hash) => {
+            if (err) {
+                console.log(err);
+                return res.status(401).json({
+                    status: 401,
+                    msg: 'bcrypt code failed',
+                });
+            }
+            try {
+                await User.findOneAndRemove({ email});
+                await ResetPass.findOneAndRemove({
+                    email
+                });
+                return res.status(200).json({
+                    status: 200,
+                    msg: 'Changed password',
+                });
+            } catch (error) {
+                return res.status(404).json({
+                    status: 404,
+                    msg: 'Code or email not found',
+                });
+            }
+        });
+    });
+});
 module.exports = router;
