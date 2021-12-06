@@ -96,7 +96,7 @@
                         $getcode.hide();
                         $confirm.show();
                         email = emaildata.email;
-                        
+                        $('#notify').text('We sent a confirm code to email, please check it!');
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         $('#notify').text('something wrong! please try again');

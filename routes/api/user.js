@@ -561,6 +561,7 @@ router.post('/remove', async(req, res) => {
         email,
         code
     } = req.body;
+    console.log('remove user:',req.body);
     const resetCode = await ResetPass.findOne({
         email
     });
