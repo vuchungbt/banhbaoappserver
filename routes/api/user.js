@@ -565,6 +565,7 @@ router.post('/remove', async(req, res) => {
     const resetCode = await ResetPass.findOne({
         email
     });
+    console.log('confirm code to remove:',resetCode);
     if(!resetCode) {
         return res.status(404).json({
             status: 404,
@@ -572,6 +573,7 @@ router.post('/remove', async(req, res) => {
         });
     }
     let enCode = resetCode.enCode;
+    console.log('enCode:',enCode);
     const match = await bcrypt.compare(code, enCode);
     if (!match) {
         return res.status(404).json({
@@ -579,8 +581,10 @@ router.post('/remove', async(req, res) => {
             msg: 'Code or email not found',
         });
     }
+    console.log('match:',match);
     bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(password, salt, async(err, hash) => {
+            console.log('hash:');
             if (err) {
                 console.log(err);
                 return res.status(401).json({
@@ -590,9 +594,7 @@ router.post('/remove', async(req, res) => {
             }
             try {
                 await User.findOneAndRemove({ email});
-                await ResetPass.findOneAndRemove({
-                    email
-                });
+                await ResetPass.findOneAndRemove({email});
                 return res.status(200).json({
                     status: 200,
                     msg: 'Changed password',
