@@ -20,9 +20,10 @@
             <div class="col-lg-7">
                 <div class="card border-0 rounded-lg pt-4">
                     <center><h2>Delete Account</h2></center>
-                    <p id="notify">Please submit your email to remove account in our system. Please make sure you clear our <a href="http://www.blwsmartware.net/static/chat-dating-policy">policy</a>
+                    <center>
+                        <p id="notify">Please submit your email to remove account in our system. Please make sure you clear our <a href="http://www.blwsmartware.net/static/chat-dating-policy">policy</a>
                      and <a href="http://www.blwsmartware.net/static/chat-dating-term">term</a> !
-                    </p>
+                    </p> </center>
                     <div class="card-body">
                         <form id="getcodePanel" action="#" method="POST">
                             <div class="form-floating mb-3"><input id="email"
@@ -115,7 +116,7 @@
                     success: function (data, textStatus, jqXHR) {
                         console.log('-----------success----------------'); //Code or email not found
                         $confirm.hide();
-                        $('#notify').text('account have been deleted!');
+                        $('#notify').text('Account have been deleted! Sorry about any badly. Hope you will come back !');
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         console.log('-----------fail----------------');
