@@ -62,45 +62,6 @@
             var email = '';
             var code = '';
 
-            function submitEmail(emaildata) {
-                $.ajax({
-                    url: "/api/user/getcode",
-                    type: "POST",
-                    data: JSON.stringify(emaildata),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (data, textStatus, jqXHR) {
-                        $getcode.hide();
-                        $confirm.show();
-                        email = emaildata.email;
-                        console.log('-----------success email :', email);
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        if (jqXHR.status === 404) {
-                            console.log('-----------fail 404----------------');
-                        }
-                        else {
-
-                        }
-                    }
-                });
-            }
-            function submitCode(codedata) {
-                $.ajax({
-                    url: "/api/user/remove",
-                    type: "POST",
-                    data: JSON.stringify(codedata),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (data, textStatus, jqXHR) {
-                        console.log('-----------success----------------');
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.log('-----------fail----------------');
-                    }
-                });
-            }
-
             $("#getcodePanel").submit(function (event) {
                 event.preventDefault();
 
@@ -121,6 +82,46 @@
 
                 submitCode(formData);
             });
+            function submitEmail(emaildata) {
+                console.log('email data:',emaildata);
+                $.ajax({
+                    url: "/api/user/getcode",
+                    type: "POST",
+                    data: JSON.stringify(emaildata),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data, textStatus, jqXHR) {
+                        $getcode.hide();
+                        $confirm.show();
+                        email = emaildata.email;
+                        console.log('-----------success email :', email);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        if (jqXHR.status === 404) {
+                            console.log('-----------fail 404----------------');
+                        }
+                        else {
+                            onsole.log('-----------status----------------',jqXHR.status);
+                        }
+                    }
+                });
+            }
+            function submitCode(codedata) {
+                $.ajax({
+                    url: "/api/user/remove",
+                    type: "POST",
+                    data: JSON.stringify(codedata),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data, textStatus, jqXHR) {
+                        console.log('-----------success----------------');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('-----------fail----------------');
+                    }
+                });
+            }
+
         })
     </script>
 </body>

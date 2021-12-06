@@ -308,6 +308,9 @@ function generate() {
 router.post('/getcode', async(req, res) => {
     
     const email = req.body.email;
+    console.log('email:',email);
+    console.log('req.body.email:',req.body.email);
+    
     const resetPass = await ResetPass.find({
         email
     });
