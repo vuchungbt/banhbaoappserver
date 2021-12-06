@@ -409,7 +409,7 @@ router.post('/confirm', async(req, res) => {
             mess: 'Code not found',
         });
     }
-    enCode = resetCode.enCode;
+    let enCode = resetCode.enCode;
     const match = await bcrypt.compare(code, enCode);
     if (!match) {
         return res.status(400).json({
@@ -471,6 +471,71 @@ router.post('/changepassword', async(req, res) => {
             }
         });
     });
+});
+
+//-----------------delete user---------------------
+router.post('/remove', async(req, res) => {
+    const email = req.body.email;
+    const resetPass = await ResetPass.find({
+        email
+    });
+    const user = await User.findOne({
+        email
+    });
+    if (!user) {
+        return  res.status(404).json({
+            status: 404,
+            msg: 'email not found',
+        });
+    }
+    _id = user._id;
+    const mailUser = email;
+    const code = generate();
+    if (resetPass.length != 0) {
+        bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(code, salt, async(err, hash) => {
+                if (err) {
+                    return res.status(401).json({
+                        status: 401,
+                        msg: 'bcrypt code failed',
+                    });
+                }
+                await ResetPass.findOneAndUpdate({
+                    email,
+                }, {
+                    enCode: hash,
+                }, );
+            });
+        });
+    } else {
+        bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(code, salt, async(err, hash) => {
+                if (err) {
+                    return res.status(401).json({
+                        status: 401,
+                        msg: 'bcrypt code failed',
+                    });
+                }
+                await ResetPass.create({
+                    email: mailUser,
+                    userId: _id,
+                    enCode: hash,
+                });
+            });
+        });
+    }
+    try {
+        sendmail(mailUser, code);
+        return res.status(200).json({
+            status: 200,
+            mess: 'We sent code to your email',
+        });
+    } catch (error) {
+        return res.status(401).json({
+            status: 401,
+            mess: 'Sent code fail',
+        });
+    }
 });
 
 module.exports = router;

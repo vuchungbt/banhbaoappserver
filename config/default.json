@@ -1,10 +1,10 @@
 {
     "mongoURI": "mongodb://localhost:27017/chatdating",
     "jwtSecret": "chatdating secret chatdating",
-    "gmail": "noreply.strangerfunny@gmail.com",
-    "pass": "kaydateamqQ!@#",
+    "gmail": "blwinfo196@gmail.com",
+    "pass": "0905121479qQ!@#",
     "text": "Code reset password: ",
-    "subject": "[CODE RESET Strangerfunny]",
+    "subject": "[CODE RESET]",
     "key": "root123!@#adm",
     "ServerKey" : "AAAACp5wUbo:APA91bHs47_DzL_n8JfrwEYK_BKLN7h1iOGYq85GGFfXsrY-2RVAbNjpuBSZgtIzbFN3xFrJJTUCBUHXqXxiuPBx7x--Bq-vhccFaO3FbNeeVWdg8gLyJsdc1cDf4JnIioAt2ZQ1INth"
 }
