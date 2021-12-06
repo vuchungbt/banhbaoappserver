@@ -311,10 +311,11 @@ function generate() {
 router.post('/resetpassword', async(req, res) => {
     const email = req.body.email;
     const resetPass = await ResetPass.find({
-        email,
+        email
     });
+    console.log('resetPass',resetPass);
     const user = await User.findOne({
-        email,
+        email
     });
     if (!user) {
         return  res.status(404).json({
@@ -335,9 +336,9 @@ router.post('/resetpassword', async(req, res) => {
                     });
                 }
                 await ResetPass.findOneAndUpdate({
-                    email,
+                    email
                 }, {
-                    enCode: hash,
+                    enCode: hash
                 }, );
             });
         });
@@ -360,11 +361,13 @@ router.post('/resetpassword', async(req, res) => {
     }
     try {
         sendmail(mailUser, code);
+        console.log('We sent code to',mailUser);
         return res.status(200).json({
             status: 200,
-            mess: 'We sent code to your email',
+            mess: 'We sent code to your email'
         });
     } catch (error) {
+        console.log('We sent code Erorr',error);
         return res.status(401).json({
             status: 401,
             mess: 'Sent code fail',
@@ -404,6 +407,7 @@ router.post('/confirm', async(req, res) => {
     const userId = user._id;
 
     if (!resetCode) {
+        console.log('resetCode fail');
         return res.status(404).json({
             status: 404,
             mess: 'Code not found',
@@ -412,6 +416,7 @@ router.post('/confirm', async(req, res) => {
     let enCode = resetCode.enCode;
     const match = await bcrypt.compare(code, enCode);
     if (!match) {
+        console.log('resetCode not match');
         return res.status(400).json({
             status: 400,
             mess: 'Code Fail',
@@ -419,7 +424,7 @@ router.post('/confirm', async(req, res) => {
     }
     return res.status(200).json({
         status: 200,
-        mess: 'Confirm code',
+        mess: 'Confirm code OK',
         // userId: userId
     });
 });
@@ -431,9 +436,15 @@ router.post('/changepassword', async(req, res) => {
         password
     } = req.body;
     const resetCode = await ResetPass.findOne({
-        email,
+        email
     });
-    enCode = resetCode.enCode;
+    if(!resetCode) {
+        return res.status(404).json({
+            status: 404,
+            mess: 'Code or email not found',
+        });
+    }
+    let enCode = resetCode.enCode;
     const match = await bcrypt.compare(code, enCode);
     if (!match) {
         return res.status(404).json({
