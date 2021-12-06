@@ -20,10 +20,11 @@
             <div class="col-lg-7">
                 <div class="card border-0 rounded-lg pt-4">
                     <center><h2>Delete Account</h2></center>
+                    <p id="notify"></p>
                     <div class="card-body">
                         <form id="getcodePanel" action="#" method="POST">
                             <div class="form-floating mb-3"><input id="email"
-                                    class="form-control bg-transparent text-white" name="email" type="email"
+                                    class="form-control " name="email" type="email"
                                     placeholder="email" /> 
                                 </div>
                             <div class="mt-4 mb-0">
@@ -33,7 +34,7 @@
                         </form>
                         <form id="confirmPanel" action="#" method="POST">
                             <div class="form-floating mb-3"><input id="code"
-                                    class="form-control bg-transparent text-white" name="code" placeholder="code" type="text" /> </div>
+                                    class="form-control " name="code" placeholder="code" type="text" /> </div>
                             <div class="mt-4 mb-0">
                                 <div class="d-grid"><button class="btn btn-primary btn-block"
                                         type="submit">Submit</button></div>
@@ -77,13 +78,14 @@
 
                 var $form = $(this);
                 var formData = {
-                    code: $form.find('input[name="code"]').val()
+                    code: $form.find('input[name="code"]').val(),
+                    email:email
                 };
 
                 submitCode(formData);
             });
             function submitEmail(emaildata) {
-                console.log('email data:',emaildata);
+                
                 $.ajax({
                     url: "/api/user/getcode",
                     type: "POST",
@@ -94,15 +96,10 @@
                         $getcode.hide();
                         $confirm.show();
                         email = emaildata.email;
-                        console.log('-----------success email :', email);
+                        
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        if (jqXHR.status === 404) {
-                            console.log('-----------fail 404----------------');
-                        }
-                        else {
-                            onsole.log('-----------status----------------',jqXHR.status);
-                        }
+                        $('#notify').text('something wrong! please try again');
                     }
                 });
             }
@@ -114,10 +111,13 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (data, textStatus, jqXHR) {
-                        console.log('-----------success----------------');
+                        console.log('-----------success----------------'); //Code or email not found
+                        $confirm.hide();
+                        $('#notify').text('account have been deleted!');
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         console.log('-----------fail----------------');
+                        $('#notify').text('something wrong! please try again !');
                     }
                 });
             }
