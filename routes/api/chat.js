@@ -141,6 +141,40 @@ const connect = io => {
                             console.log('joined-to-room successfully');
                             const messageCreatedResult = await MessageModel.sendMessageToRoom(userToCreateRoom.userId, socket.userId, 'system', 'The conversation begins.\nSay \'bye\' to end conversation', room.roomId);
                             io.to(room.roomId).emit('new-message', messageCreatedResult);
+
+                            //-------------------------------------------------------------------------------------------
+                    
+                            let  listtoken =[userToCreateRoom.token_device,  socket.token_device];
+                            
+                            const messageFi = {
+                                notification: {
+                                    title:"Message from people",
+                                    body:'The conversation begins'
+                                },
+                                data: {
+                                    score: '850', time: '2:45',
+                                    message:'The conversation begins'
+                                },
+                                tokens: listtoken
+                            };
+
+                            await admin.messaging().sendMulticast(messageFi).then((respx)=> {
+                                console.log("Send THEN ",respx) ;
+                                if (respx.failureCount > 0) {
+                                    const failedTokens = [];
+                                    respx.responses.forEach((resp, idx) => {
+                                    if (!resp.success) {
+                                        failedTokens.push(registrationTokens[idx]);
+                                    }
+                                    });
+                                    console.log('List of tokens that caused failures: ' + failedTokens);
+                                }
+                            })
+                            .catch((er)=>{
+                                console.log("Send error ",er) ;
+                            })
+                            //-----------------------
+
                         } catch (e) {
                             socket.emit('error', {
                                 data: socket.userId,
@@ -293,6 +327,42 @@ const connect = io => {
 
                         const messageCreatedResult = await MessageModel.sendMessageToRoom(trading, socket.userId, 'send-heart', 'You have send a heart', heart.roomId);
                         io.to(heart.roomId).emit('new-message', messageCreatedResult);
+
+                        //-------------------------------------------------------------------------------------------
+                        
+                        let  listtoken =[];
+                        r.token_devices.forEach(dv => {
+                            if(dv!==null && dv!=='' && dv!==undefined) {
+                                listtoken.push(dv);
+                            }
+                        });
+                        const messageFi = {
+                            notification: {
+                                title:"Message from people",
+                                body:'You have new message'
+                            },
+                            data: {
+                                score: '850', time: '2:45',
+                                message:'You have new message'
+                            },
+                            tokens: listtoken
+                        };
+
+                        await admin.messaging().sendMulticast(messageFi).then((respx)=> {
+                            console.log("Send THEN ",respx) ;
+                            if (respx.failureCount > 0) {
+                                const failedTokens = [];
+                                respx.responses.forEach((resp, idx) => {
+                                if (!resp.success) {
+                                    failedTokens.push(registrationTokens[idx]);
+                                }
+                                });
+                                console.log('List of tokens that caused failures: ' + failedTokens);
+                            }
+                        })
+                        .catch((er)=>{
+                            console.log("Send error ",er) ;
+                        })
                     }
 
                 } else {
@@ -302,6 +372,7 @@ const connect = io => {
                         type: 'send-heart'
                     });
                 }
+                
             });
             socket.on('send-report', async(data) => {
 
@@ -361,6 +432,44 @@ const connect = io => {
                     const trading = r.members.find(element => element != socket.userId);
                     const messageCreatedResult = await MessageModel.sendMessageToRoom(trading, socket.userId, 'system', 'The conversation ended', room.roomId);
                     io.to(messageCreatedResult.room_id).emit('new-message', messageCreatedResult);
+
+                    
+                    //-------------------------------------------------------------------------------------------
+                    
+                    let  listtoken =[];
+                    r.token_devices.forEach(dv => {
+                        if(dv!==null && dv!=='' && dv!==undefined) {
+                            listtoken.push(dv);
+                        }
+                    });
+                    const messageFi = {
+                        notification: {
+                            title:"Message from people",
+                            body:'The conversation ended'
+                        },
+                        data: {
+                            score: '850', time: '2:45',
+                            message:'The conversation ended'
+                        },
+                        tokens: listtoken
+                    };
+
+                      await admin.messaging().sendMulticast(messageFi).then((respx)=> {
+                          console.log("Send THEN ",respx) ;
+                          if (respx.failureCount > 0) {
+                            const failedTokens = [];
+                            respx.responses.forEach((resp, idx) => {
+                              if (!resp.success) {
+                                failedTokens.push(registrationTokens[idx]);
+                              }
+                            });
+                            console.log('List of tokens that caused failures: ' + failedTokens);
+                          }
+                      })
+                      .catch((er)=>{
+                        console.log("Send error ",er) ;
+                      })
+
                 }
             });
 
