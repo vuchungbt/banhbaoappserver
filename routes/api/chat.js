@@ -114,7 +114,8 @@ const connect = io => {
                             _.remove(clients, client => client.userId === userToCreateRoom.userId);
                             // findOrCreateRoomObject by memberIds
                             const roomId = await RoomDetails.findRoomOrCreateOneWithMembers([userToCreateRoom.userId, socket.userId],[userToCreateRoom.token_device,socket.token_device]);
-
+                            console.log('1.userToCreateRoom.token_device :::' , userToCreateRoom.token_device);
+                            console.log('1.socket.token_device           :::' , socket.token_device);
                             const room = {
                                 roomId: roomId,
                                 userId: userToCreateRoom.userId,
@@ -143,7 +144,8 @@ const connect = io => {
                             io.to(room.roomId).emit('new-message', messageCreatedResult);
 
                             //-------------------------------------------------------------------------------------------
-                    
+                            console.log('2.userToCreateRoom.token_device :::' , userToCreateRoom.token_device);
+                            console.log('2.socket.token_device           :::' , socket.token_device);
                             let  listtoken =[userToCreateRoom.token_device,  socket.token_device];
                             
                             const messageFi = {
