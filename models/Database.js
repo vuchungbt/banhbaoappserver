@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const User = require("./User");
 const Schema = mongoose.Schema;
 
+const MessageModel = require("./Message");
 
 // hien 
 const messageSchema = mongoose.Schema({
@@ -86,6 +87,7 @@ RoomDetailsSchema.statics.findAndClean = async function(status) {
     });
     console.log('before--------: ',resultRoom.length);
     resultRoom.forEach(room => {
+        MessageModel.removeMessageToRoom(room._id);
         room.remove();
     });
     let resultRoom2 = await RoomDetails.find({

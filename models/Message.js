@@ -43,6 +43,15 @@ MessageSchema.statics.sendMessageToRoom = async function(receivedId, senderId, t
     });
     return message;
 }
+MessageSchema.statics.removeMessageToRoom = async function(roomId) {
+    const message = await MessageModel.find({
+        room_id: roomId
+    });
+    message.forEach(mess => {
+        mess.remove();
+    });
+    return 0;
+}
 MessageSchema.statics.findHeartFromRoomId = async function(roomId, senderId) {
     const message = await MessageModel.findOne({
         sender: senderId,
