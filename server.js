@@ -26,7 +26,7 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.set('view engine', 'pug');
 app.set('views', './views');
-app.use(morgan('tiny'));
+//app.use(morgan('tiny'));
 const server = require("http").Server(app);
 //const io = require("socket.io")(server);
 app.use(

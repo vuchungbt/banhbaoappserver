@@ -168,7 +168,7 @@ const updateUser = (condition, updateBody) => {
 router.post("/remove-room-close", authMiddleware, async(req, res) => {
     const {key } = req.body
     if(key == config.get('key')) {
-        const r = await RoomDetails.findAndClean(0);
+        const r = await RoomDetails.findAndClean(1);
         res.json({
             status: 200,
             msg: r,
