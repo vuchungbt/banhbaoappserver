@@ -103,26 +103,26 @@ const connect = io => {
                     r.save();
 
                 } else {
-                    let client = {
-                        socket: socket,
-                        username: socket.username,
-                        userId: socket.userId,
-                        token_device : socket.token_device
-                    };
-                    clients.push(client);
-                    sleep(2500);
+                   
+               
                     // lấy ngẫu nhiên trong hàng đợi 1 user để tạo room
                     const userToCreateRoom = _.sample(clients);
                     
                     if (!userToCreateRoom || userToCreateRoom.userId === socket.userId) // ko co ai
                     {
+                        let client = {
+                            socket: socket,
+                            username: socket.username,
+                            userId: socket.userId,
+                            token_device : socket.token_device
+                        };
+                        clients.push(client);
                         console.log('no body - push mysefl and waiting...');
                                                
                     } else { // create room 
                         try {
                             // tạo phòng 
                             _.remove(clients, client => client.userId === userToCreateRoom.userId);
-                            _.remove(clients, client => client.userId === socket.userId);
                             // findOrCreateRoomObject by memberIds
                             const roomId = await RoomDetails.findRoomOrCreateOneWithMembers([userToCreateRoom.userId, socket.userId],[userToCreateRoom.token_device,socket.token_device]);
                             
