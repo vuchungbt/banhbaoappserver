@@ -27,6 +27,14 @@ Date.prototype.addHours = function(h) {
     return this;
 };
 
+function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+  }
+
 const clients = []; // awating
 let number = 0;
 var data = fs.readFileSync("xref.txt", {
@@ -95,19 +103,20 @@ const connect = io => {
                     r.save();
 
                 } else {
+                    let client = {
+                        socket: socket,
+                        username: socket.username,
+                        userId: socket.userId,
+                        token_device : socket.token_device
+                    };
+                    clients.push(client);
                     // lấy ngẫu nhiên trong hàng đợi 1 user để tạo room
                     const userToCreateRoom = _.sample(clients);
-                    
+                    sleep(5500);
                     if (!userToCreateRoom || userToCreateRoom.userId === socket.userId) // ko co ai
                     {
-                        console.log('no body - push mysefl');
-                        let client = {
-                            socket: socket,
-                            username: socket.username,
-                            userId: socket.userId,
-                            token_device : socket.token_device
-                        };
-                        clients.push(client);
+                        console.log('no body - push mysefl and waiting...');
+                                               
                     } else { // create room 
                         try {
                             // tạo phòng 
