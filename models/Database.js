@@ -79,6 +79,23 @@ RoomDetailsSchema.statics.findRoomOrCreateOneWithMembers = async function(member
     }
     return resultRoom._id;
 }
+//---- delete room close
+RoomDetailsSchema.statics.findAndClean = async function(status) {
+    let resultRoom = await RoomDetails.find({
+        status: status
+    });
+    console.log('before--------: ',resultRoom.length);
+    resultRoom.forEach(room => {
+        room.remove();
+    });
+    let resultRoom2 = await RoomDetails.find({
+        status: status
+    });
+    console.log('before--------: ',resultRoom2.length);
+    return 0;
+}
+
+
 RoomDetailsSchema.statics.findRoomAndRemoveToken = async function(token_device) {
     let resultRoom = await RoomDetails.findOne({
         status: 0

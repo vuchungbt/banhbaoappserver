@@ -13,6 +13,8 @@ const Feedback = require('../../models/Feedback');
 const ResetPass = require('../../models/resetPass');
 const ALPHABET = '0123456789ABCDEFGHIKLMNOPQRSTUVWXYZ';
 
+const RoomDetails = require("../../models/Database");
+
 // @route POST api/user
 // @desc Create An User
 // @access Public
@@ -163,6 +165,22 @@ const updateUser = (condition, updateBody) => {
         new: true,
     }).select('-password');
 };
+router.post("/remove-room-close", authMiddleware, async(req, res) => {
+    const {key } = req.body
+    if(key == config.get('key')) {
+        const r = await RoomDetails.findAndClean(0);
+        res.json({
+            status: 200,
+            msg: r,
+        })
+    }
+    else {
+        res.json({
+            status: 400,
+            msg: 'failed',
+        })
+    }
+})
 
 // @route POST api/user/password
 // @desc Change password
