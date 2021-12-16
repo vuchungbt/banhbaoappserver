@@ -112,7 +112,7 @@ const connect = io => {
                     clients.push(client);
                     // lấy ngẫu nhiên trong hàng đợi 1 user để tạo room
                     const userToCreateRoom = _.sample(clients);
-                    sleep(5500);
+                    sleep(2500);
                     if (!userToCreateRoom || userToCreateRoom.userId === socket.userId) // ko co ai
                     {
                         console.log('no body - push mysefl and waiting...');
