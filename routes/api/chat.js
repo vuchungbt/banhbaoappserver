@@ -511,7 +511,7 @@ const connect = io => {
                 }
             });
             socket.on("disconnect", reason => {
-                _.remove(clients, client => client.userId === socket.userId);
+                //_.remove(clients, client => client.userId === socket.userId);
             });
         }
 
